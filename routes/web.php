@@ -11,9 +11,8 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth as FacadesAuth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [AuthController::class, 'showLogin']);
+
 
 // Rute Autentikasi
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -27,8 +26,14 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Rute Dashboard Admin
 Route::get('/admin', [HomeController::class, 'admin'])->middleware(['auth', 'role:admin']);
 
+Route::prefix('user')->middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/', [HomeController::class, 'user'])->name('user.home');
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('user.monitor');
+});
 // Rute Dashboard User
-Route::get('/user', [HomeController::class, 'user'])->middleware(['auth', 'role:user'])->name('user');
+
+    
+
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
