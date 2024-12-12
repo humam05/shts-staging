@@ -2,7 +2,7 @@
     <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
         <!-- Logo/Brand -->
         <a href="{{ url('/') }}" class="text-3xl font-semibold text-white hover:text-gray-200 transition duration-300 ease-in-out">
-            Santunan Hari Tua
+            Santunan Hari Muda
         </a>
         
         <!-- Navigation Items -->
