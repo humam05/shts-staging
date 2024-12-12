@@ -37,38 +37,13 @@ class PembayaranController extends Controller
 
     public function autocomplete(Request $request)
     {
-        $term = $request->get('term', '');
 
-       
-        
-
-//         $query = "
-//           SELECT u.code,u.nama,l.no_spp,l.status_karyawan,l.hutang AS nilai_pokok, SUM(t.pencicilan_rutin + t.pencicilan_bertahap) AS total_pencicilan, l.hutang - SUM(t.pencicilan_rutin + t.pencicilan_bertahap) AS sisa_sht,
-// CASE
-// 	WHEN l.hutang - SUM(t.pencicilan_rutin + t.pencicilan_bertahap) <= 0 THEN 'Lunas'
-// 	ELSE 'Belum Lunas'
-// 	END AS status_lunas
-// FROM
-// 	t_user u
-// LEFT JOIN
-// 	lampiran l ON l.code = u.code
-// LEFT JOIN
-// 	transactions t ON t.code = u.code
-// WHERE
-// 	u.code LIKE :term
-// GROUP BY
-// 	u.code, l.code
-// LIMIT 10
-//         ";
-
-        // $results = DB::select(DB::raw($query), ['term' => '%' . $term . '%']);
-
-        // return response()->json($results);
     }
 
 
     public function monitor(Request $request)
     {
+
         // Query untuk mendapatkan data transaksi per bulan
         $query = DB::table('transactions')
             ->select(
@@ -91,11 +66,13 @@ class PembayaranController extends Controller
                 DB::raw('SUM(CASE WHEN transactions.bulan = 9 THEN transactions.pencicilan_rutin + transactions.pencicilan_bertahap END) AS sep_value'),
                 DB::raw('SUM(CASE WHEN transactions.bulan = 10 THEN transactions.pencicilan_rutin + transactions.pencicilan_bertahap END) AS oct_value'),
                 DB::raw('SUM(CASE WHEN transactions.bulan = 11 THEN transactions.pencicilan_rutin + transactions.pencicilan_bertahap END) AS nov_value'),
+
                 DB::raw('SUM(CASE WHEN transactions.bulan = 12 THEN transactions.pencicilan_rutin + transactions.pencicilan_bertahap END) AS dec_value'),
                 DB::raw('SUM(pencicilan_rutin + pencicilan_bertahap) AS grandTotal'),
             )
             ->leftJoin('t_user', 'transactions.code', '=', 't_user.code')
             ->leftJoin('lampiran', 'transactions.code', '=', 'lampiran.code');
+
 
 
         // Filter berdasarkan tahun, unit, status
@@ -119,6 +96,7 @@ class PembayaranController extends Controller
         }
 
         $transactions = $query->groupBy('transactions.code', 't_user.nama', 'lampiran.no_spp', 'lampiran.tanggal_spp', 'lampiran.status_karyawan', 'lampiran.unit', 'lampiran.hutang')
+
             ->get();
 
         $total_jan = $transactions->sum('jan_value');
@@ -142,8 +120,6 @@ class PembayaranController extends Controller
         $status = Lampiran::select('status_karyawan')->distinct()->get();
         $years = Transaction::select('year')->distinct()->pluck('year');
         $years_spp = Lampiran::selectRaw('YEAR(tanggal_spp) as year_spp')->distinct()->pluck('year_spp');
-
-        // Kirim data ke view
         return view('admin.monitor_pembayaran', compact('transactions', 'total_sisa', 'total_dibayarkan', 'years_spp', 'total_jan', 'total_feb', 'total_mar', 'total_apr', 'total_may', 'total_june', 'total_july', 'total_ags', 'total_sep', 'total_oct', 'total_nov', 'total_dec', 'total_grand', 'units', 'status', 'years'));
     }
 }
