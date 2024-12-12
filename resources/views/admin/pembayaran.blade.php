@@ -114,45 +114,17 @@
 
 @push('js')
     <!-- Pastikan jQuery ter-load -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script> --}}
     <!-- jQuery UI (untuk autocomplete) -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" crossorigin="anonymous"></script>
 
     <script>
-        // Inisialisasi formatter untuk Rupiah
-        const formatter = new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0,
-        });
-
         $(function() {
+            var availableTags = @json($data);
             $("#kode_user").autocomplete({
-                source: "{{ route('admin.autocomplete') }}",
-                minLength: 2,
-                select: function(event, ui) {
-                    $('#nama').val(ui.item.nama);
-                    $('#no_spp').val(ui.item.no_spp);
-                    $('#status_karyawan').val(ui.item.status_karyawan);
-                    $('#tanggal_pensiun').val(ui.item.tanggal_pensiun);
-                    // Format nilai pokok dan sisa_sht menjadi mata uang Rupiah
-                    let nilaiPokok = ui.item.nilai_pokok ? Number(ui.item.nilai_pokok) : 0;
-                    let sisaSHT = ui.item.sisa_sht ? Number(ui.item.sisa_sht) : 0;
-
-                    $('#nilai_pokok').val(formatter.format(nilaiPokok));
-                    $('#sisa_sht').val(formatter.format(sisaSHT));
-
-                    // Set status lunas (tanpa input, hanya teks)
-                    $('#status_lunas').text(ui.item.status_lunas);
-
-                    // Anda dapat menambahkan styling berdasarkan status:
-                    if (ui.item.status_lunas === 'Lunas') {
-                        $('#status_lunas').removeClass('text-red-600').addClass('text-green-600');
-                    } else {
-                        $('#status_lunas').removeClass('text-green-600').addClass('text-red-600');
-                    }
-                }
+                source: availableTags,
+                minLength: 3
             });
         });
     </script>

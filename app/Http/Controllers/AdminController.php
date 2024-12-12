@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\RekapExport;
 use App\Models\Lampiran;
 use App\Models\Transaction;
 use App\Models\User;
@@ -10,6 +11,7 @@ use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
@@ -53,34 +55,35 @@ class AdminController extends Controller
                 }
             }
 
-            if ($request->has('status')) {
-                if ($request->get('status')) {
-                    $query->where('lampiran.status_karyawan', $request->status);
-                }
-            }
-            if ($request->has('unit')) {
-                if ($request->get('unit')) {
-                    $query->where('lampiran.unit', $request->unit);
-                }
-            }
 
-            if ($request->has('tahun')) {
-                if ($request->get('tahun')) {
-                    $query->whereYear('lampiran.tanggal_spp', $request->tahun);
-                }
-            }
+            // Filter by 'status'
+    if ($request->has('status') && $request->status) {
+        $query->where('lampiran.status_karyawan', $request->status);
+    }
 
-            if ($request->has('bulan')) {
-                if ($request->get('bulan')) {
-                    $query->whereMonth('lampiran.tanggal_spp', $request->bulan);
-                }
-            }
+    // Filter by 'unit'
+    if ($request->has('unit') && $request->unit) {
+        $query->where('lampiran.unit', $request->unit);
+    }
 
-            if ($request->has('sort_tanggal')) {
-                if ($request->get('sort_tanggal') === 'asc' || $request->get('sort_tanggal') === 'desc') {
-                    $query->orderBy('lampiran.tanggal_spp', $request->sort_tanggal);
-                }
-            }
+    // Filter by 'tahun' (year)
+    if ($request->has('tahun') && $request->tahun) {
+        $query->whereYear('lampiran.tanggal_spp', $request->tahun);
+    }
+
+    // Filter by 'bulan' (month)
+    if ($request->has('bulan') && $request->bulan) {
+        $query->whereMonth('lampiran.tanggal_spp', $request->bulan);
+    }
+
+    // Sort by 'sort_tanggal' (date)
+    if ($request->has('sort_tanggal') && in_array($request->sort_tanggal, ['asc', 'desc'])) {
+        $query->orderBy('lampiran.tanggal_spp', $request->sort_tanggal);
+    }
+
+
+          
+
 
         $users = $query->groupBy(
             't_user.nama',
@@ -92,12 +95,20 @@ class AdminController extends Controller
             'lampiran.hutang'
         )
             ->get();
+
         $totalHutang = $users->sum('hutang');
         $totalPencicilan = $users->sum('total_pembayaran');
         $totalSisaSht = $users->sum('sisa_sht');
 
+
+        if ($request->has('export') && $request->get('export') == 'excel') {
+            $filters = $request->only(['status_lunas', 'status', 'unit', 'tahun', 'bulan', 'sort_tanggal']);
+            return Excel::download(new RekapExport($filters), 'users_data.xlsx');
+        }            
+    
         // Fetch filter options for units, statuses, years, and months
-        $units = Lampiran::select('unit')->distinct()->get();
+        $units = DB::table('lampiran')->select('unit')->distinct()->get();
+
         $status = Lampiran::select('status_karyawan')->distinct()->get();
         $years = Lampiran::selectRaw('YEAR(tanggal_spp) as year')->distinct()->pluck('year');
         $months = Lampiran::selectRaw('MONTH(tanggal_spp) as month')->distinct()->pluck('month');

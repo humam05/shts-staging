@@ -134,6 +134,10 @@
                         Filter
                     </button>
                 </div>
+
+                <button type="submit" name="export" value="excel" class="btn btn-success">
+                    <i class="fas fa-download"></i> Export to Excel
+                </button>
             </form>
         </div>
 
