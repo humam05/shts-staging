@@ -18,11 +18,11 @@
         </div> --}}
 
         <!-- Transaksi Section -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h3 class="text-xl font-semibold text-gray-800 mb-4">Transaksi Anda</h3>
+        {{-- <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">Transaksi Anda</h3> --}}
 
             {{-- @if($transactions->count()) --}}
-                <div class="overflow-x-auto">
+                {{-- <div class="overflow-x-auto">
                     <table class="min-w-full bg-white">
                         <thead>
                             <tr>
@@ -32,7 +32,7 @@
                                 <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Pencicilan Bertahap</th>
                                 <th class="px-6 py-3 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Tanggal Dibuat</th>
                             </tr>
-                        </thead>
+                        </thead> --}}
                         {{-- <tbody>
                             @foreach($transactions as $transaction)
                                 <tr class="hover:bg-gray-50">
@@ -44,8 +44,8 @@
                                 </tr>
                             @endforeach
                         </tbody> --}}
-                    </table>
-                </div>
+                    {{-- </table>
+                </div> --}}
 
                 {{-- <!-- Pagination (Jika Diperlukan) -->
                 <div class="mt-4">
@@ -54,7 +54,7 @@
             {{-- @else
                 <p class="text-gray-600">Anda belum memiliki transaksi.</p>
             @endif --}}
-        </div>
+        {{-- </div> --}}
     </div>
 </div>
 @endsection

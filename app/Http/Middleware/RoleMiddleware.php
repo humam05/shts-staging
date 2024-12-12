@@ -20,9 +20,9 @@ class RoleMiddleware
             return redirect('/login');
         }
 
-        if (Auth::user()->role != $role) {
-            abort(403, 'Unauthorized action.');
-        }
+        // if (Auth::user()->role != $role) {
+        //     abort(403, 'Unauthorized action.');
+        // }
 
         return $next($request);
     }
