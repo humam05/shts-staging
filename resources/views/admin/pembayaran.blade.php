@@ -1,109 +1,76 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto p-6 flex justify-center">
-        <div class="bg-white rounded-lg shadow-md p-6 w-full max-w-4xl">
-            <h1 class="text-2xl font-bold text-gray-800 mb-6">Form Pembayaran</h1>
-            <form action="{{ route('admin.transactions.store') }}" method="POST" class="space-y-4">
+    <div class="container mx-auto p-6">
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Form Pembayaran</h1>
+            <form action="{{ route('admin.transactions.store') }}" method="POST" id="paymentForm">
                 @csrf
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Kolom Kiri: Input Pembayaran -->
-                    <div class="space-y-4">
-                        <!-- Field Kode User (Autocomplete) -->
-                        <div>
-                            <label for="kode_user" class="block text-sm font-medium text-gray-700 mb-1">Kode User</label>
-                            <input type="text" name="kode_user" id="kode_user"
-                                class="border border-gray-300 rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Masukkan kode user...">
-                        </div>
-                        <!-- Field Pembayaran Rutin -->
-                        <div>
-                            <label for="pencicilan_rutin" class="block text-sm font-medium text-gray-700 mb-1">Pencicilan
-                                Rutin</label>
-                            <input type="number" name="pencicilan_rutin" id="pencicilan_rutin"
-                                class="border border-gray-300 rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Masukkan nominal pencicilan rutin...">
+                <div id="dynamicFields">
+                    <!-- Initial Row -->
+                    <div class="payment-row mb-6 card shadow-md rounded-lg p-6">
+                        <!-- Kode User (Autocomplete) -->
+                        <div class="mb-4">
+                            <label for="kode_user[]" class="text-lg font-medium text-gray-700 mb-2">Kode User</label>
+                            <input type="text" name="kode_user[]"
+                                class="kode_user w-full px-4 py-2 border border-gray-300 rounded-md text-lg"
+                                placeholder="Masukkan kode user atau nama">
                         </div>
 
-                        <!-- Field Pembayaran Bertahap -->
-                        <div>
-                            <label for="pencicilan_bertahap" class="block text-sm font-medium text-gray-700 mb-1">Pencicilan
-                                Bertahap</label>
-                            <input type="number" name="pencicilan_bertahap" id="pencicilan_bertahap"
-                                class="border border-gray-300 rounded w-full px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Masukkan nominal pencicilan bertahap...">
-                        </div>
-
-                    </div>
-
-                    <!-- Kolom Kanan: Field Hasil Autocomplete -->
-                    <div class="space-y-4">
-                        <!-- Field Nama -->
-                        <div>
-                            <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
-                            <input type="text" name="nama" id="nama"
-                                class="border border-gray-300 rounded w-full px-3 py-2 bg-gray-100 focus:outline-none"
+                        <!-- Nama -->
+                        <div class="mb-4">
+                            <label for="nama[]" class="text-lg font-medium text-gray-700 mb-2">Nama</label>
+                            <input type="text" name="nama[]"
+                                class="nama w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed"
                                 readonly>
                         </div>
 
-                        <!-- Field No SPP -->
-                        <div>
-                            <label for="no_spp" class="block text-sm font-medium text-gray-700 mb-1">No SPP</label>
-                            <input type="text" name="no_spp" id="no_spp"
-                                class="border border-gray-300 rounded w-full px-3 py-2 bg-gray-100 focus:outline-none"
+                        <!-- No SPP -->
+                        <div class="mb-4">
+                            <label for="no_spp[]" class="text-lg font-medium text-gray-700 mb-2">No SPP</label>
+                            <input type="text" name="no_spp[]"
+                                class="no_spp w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed"
                                 readonly>
                         </div>
 
-                        <!-- Field Status Karyawan (Jabatan) -->
-                        <div>
-                            <label for="status_karyawan"
-                                class="block text-sm font-medium text-gray-700 mb-1">Jabatan</label>
-                            <input type="text" name="status_karyawan" id="status_karyawan"
-                                class="border border-gray-300 rounded w-full px-3 py-2 bg-gray-100 focus:outline-none"
-                                readonly>
+                        <!-- Pencicilan Rutin -->
+                        <div class="mb-4">
+                            <label for="pencicilan_rutin[]" class="text-lg font-medium text-gray-700 mb-2">Pencicilan Rutin</label>
+                            <input type="number" name="pencicilan_rutin[]"
+                                class="pencicilan_rutin w-full px-4 py-2 border border-gray-300 rounded-md text-lg"
+                                placeholder="Nominal pencicilan rutin">
                         </div>
 
-                        <!-- Field Tanggal Pensiun -->
-                        <div>
-                            <label for="tanggal_pensiun" class="block text-sm font-medium text-gray-700 mb-1">Tanggal
-                                Pensiun</label>
-                            <input type="text" name="tanggal_pensiun" id="tanggal_pensiun"
-                                class="border border-gray-300 rounded w-full px-3 py-2 bg-gray-100 focus:outline-none"
-                                readonly>
+                        <!-- Pencicilan Bertahap -->
+                        <div class="mb-4">
+                            <label for="pencicilan_bertahap[]" class="text-lg font-medium text-gray-700 mb-2">Pencicilan Bertahap</label>
+                            <input type="number" name="pencicilan_bertahap[]"
+                                class="pencicilan_bertahap w-full px-4 py-2 border border-gray-300 rounded-md text-lg"
+                                placeholder="Nominal pencicilan bertahap">
                         </div>
 
-                        <!-- Field Nilai Pokok -->
-                        <div>
-                            <label for="nilai_pokok" class="block text-sm font-medium text-gray-700 mb-1">Nilai
-                                Pokok</label>
-                            <input type="text" name="nilai_pokok" id="nilai_pokok"
-                                class="border border-gray-300 rounded w-full px-3 py-2 bg-gray-100 focus:outline-none"
-                                readonly>
-                        </div>
-
-                        <!-- Field Sisa SHT -->
-                        <div>
-                            <label for="sisa_sht" class="block text-sm font-medium text-gray-700 mb-1">Sisa SHT</label>
-                            <input type="text" name="sisa_sht" id="sisa_sht"
-                                class="border border-gray-300 rounded w-full px-3 py-2 bg-gray-100 focus:outline-none"
-                                readonly>
-                        </div>
-
-                        {{-- Status --}}
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Status Pembayaran</label>
-                            <!-- Gunakan tag <div> atau <p> untuk menampilkan status tanpa input -->
-                            <div id="status_lunas" class="text-green-600 font-semibold bg-white px-3 py-2 rounded">
-                                <!-- Akan diisi dari JavaScript setelah autocomplete memilih user -->
-                            </div>
+                        <!-- Remove Row Button -->
+                        <div class="flex justify-end">
+                            <button type="button" class="text-red-600 hover:text-red-800 text-lg"
+                                onclick="removePaymentRow(this)">
+                                <i class="fas fa-trash-alt mr-2"></i> Hapus Baris
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tombol Simpan -->
-                <div class="flex justify-end mt-4">
+                <!-- Add Row Button -->
+                <div class="flex justify-center mb-6">
+                    <button type="button" onclick="addPaymentRow()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white text-lg px-6 py-3 rounded-md shadow-md transition duration-200">
+                        Tambah Baris
+                    </button>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-center mt-6">
                     <button type="submit"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        class="bg-green-600 hover:bg-green-700 text-white text-lg px-6 py-3 rounded-md shadow-md transition duration-200">
                         Simpan
                     </button>
                 </div>
@@ -113,18 +80,126 @@
 @endsection
 
 @push('js')
-    <!-- Pastikan jQuery ter-load -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script> --}}
-    <!-- jQuery UI (untuk autocomplete) -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" crossorigin="anonymous"></script>
 
     <script>
-        $(function() {
-            var availableTags = @json($data);
-            $("#kode_user").autocomplete({
-                source: availableTags,
-                minLength: 3
+        // Function to add a new row of payment fields
+        function addPaymentRow() {
+            var dynamicFields = document.getElementById('dynamicFields');
+            var newRow = document.createElement('div');
+            newRow.classList.add('payment-row', 'mb-6', 'card', 'shadow-md', 'rounded-lg', 'p-6');
+
+            newRow.innerHTML = `
+            <div class="mb-4">
+                <label for="kode_user[]" class="text-lg font-medium text-gray-700 mb-2">Kode User</label>
+                <input type="text" name="kode_user[]" class="kode_user w-full px-4 py-2 border border-gray-300 rounded-md text-lg" placeholder="Masukkan kode user atau nama">
+            </div>
+            <div class="mb-4">
+                <label for="nama[]" class="text-lg font-medium text-gray-700 mb-2">Nama</label>
+                <input type="text" name="nama[]" class="nama w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed">
+            </div>
+            <div class="mb-4">
+                <label for="no_spp[]" class="text-lg font-medium text-gray-700 mb-2">No SPP</label>
+                <input type="text" name="no_spp[]" class="no_spp w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed">
+            </div>
+            <div class="mb-4">
+                <label for="pencicilan_rutin[]" class="text-lg font-medium text-gray-700 mb-2">Pencicilan Rutin</label>
+                <input type="number" name="pencicilan_rutin[]" class="pencicilan_rutin w-full px-4 py-2 border border-gray-300 rounded-md text-lg" placeholder="Nominal pencicilan rutin">
+            </div>
+            <div class="mb-4">
+                <label for="pencicilan_bertahap[]" class="text-lg font-medium text-gray-700 mb-2">Pencicilan Bertahap</label>
+                <input type="number" name="pencicilan_bertahap[]" class="pencicilan_bertahap w-full px-4 py-2 border border-gray-300 rounded-md text-lg" placeholder="Nominal pencicilan bertahap">
+            </div>
+            <div class="flex justify-end">
+                <button type="button" class="text-red-600 hover:text-red-800 text-lg" onclick="removePaymentRow(this)">
+                    <i class="fas fa-trash-alt mr-2"></i> Hapus Baris
+                </button>
+            </div>
+        `;
+            dynamicFields.appendChild(newRow);
+
+            // Apply autocomplete to the new "kode_user" input field
+            initializeAutocomplete(newRow.querySelector('.kode_user'));
+        }
+
+        // Function to remove a row
+        function removePaymentRow(button) {
+            var row = button.closest('.payment-row');
+            row.remove();
+        }
+
+        // Function to initialize autocomplete
+        function initializeAutocomplete(element) {
+            $(element).autocomplete({
+                source: function(request, response) {
+                    $.ajax({
+                        url: "{{ route('admin.autocomplete') }}",
+                        data: {
+                            term: request.term
+                        },
+                        success: function(data) {
+                            response(data.map(function(item) {
+                                return {
+                                    label: item.label,
+                                    value: item.value,
+                                    data: item
+                                };
+                            }));
+                        }
+                    });
+                },
+                minLength: 3,
+                select: function(event, ui) {
+                    $(this).val(ui.item.value); // Set value (kode_user)
+                    $(this).closest('.payment-row').find('.nama').val(ui.item.data.nama);
+                    $(this).closest('.payment-row').find('.no_spp').val(ui.item.data.no_spp);
+                },
+                open: function() {
+                    // Style the autocomplete dropdown to make it more accessible and organized
+                    $(".ui-autocomplete").css({
+                        "max-height": "250px", // Set a max height for the dropdown
+                        "overflow-y": "auto", // Enable vertical scrolling if list exceeds max height
+                        "font-size": "16px", // Slightly reduce font size for better fit
+                        "background-color": "white", // Set background color for contrast
+                        "border": "1px solid #ddd", // Add a subtle border for visibility
+                        "box-shadow": "0 2px 5px rgba(0,0,0,0.15)", // Optional: Add a shadow for better contrast
+                        "width": "auto", // Let the dropdown fit the content width
+                        "min-width": "200px", // Set a minimum width to ensure readability for smaller items
+                    });
+
+                    // Style each item in the autocomplete dropdown
+                    $(".ui-menu-item").css({
+                        "padding": "10px 15px", // Add padding to each item for better click area
+                        "font-size": "16px", // Ensure the font size matches the input text size
+                        "cursor": "pointer", // Change cursor to pointer to indicate it's clickable
+                    });
+
+                    // Add a separator between each item
+                    $(".ui-menu-item").not(":last-child").css({
+                        "border-bottom": "1px solid #ddd" // Add a light separator between items
+                    });
+
+                    // Optional: Style for hover state for better interaction feedback
+                    $(".ui-menu-item").hover(function() {
+                        $(this).css({
+                            "background-color": "#f0f0f0", // Change background color on hover
+                            "color": "#333" // Ensure text color changes for contrast
+                        });
+                    }, function() {
+                        $(this).css({
+                            "background-color": "white", // Reset background color when hover is removed
+                            "color": "#000" // Reset text color
+                        });
+                    });
+                }
+            });
+        }
+
+        // Initialize autocomplete for all existing rows on page load
+        $(document).ready(function() {
+            $('.kode_user').each(function() {
+                initializeAutocomplete(this);
             });
         });
     </script>

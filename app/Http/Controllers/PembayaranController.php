@@ -19,26 +19,44 @@ class PembayaranController extends Controller
 
     public function index(Request $request)
     {
-        $getUser = DB::table('t_user')->select('t_user.code,t_user.nama,lampiran.no_spp,lampiran.status_karyawan,lampiran.hutang AS nilai_pokok,
-         SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) AS total_pencicilan, 
-         lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) AS sisa_sht')
-         ->leftJoin('lampiran', 't_user.code', '=', 'lampiran.code') 
-         ->leftJoin('transactions', 't_user.code', '=', 'transactions.code')
-         ->groupBy('t.user.code')
-         ->get();
 
-         $data = $getUser->toArray();
-
-
-        dd($data);
-
-        return view('admin.pembayaran', compact('data'));
+        return view('admin.pembayaran');
     }
+
+
 
     public function autocomplete(Request $request)
     {
+        $term = $request->get('term');
+
+        // Search for both 'nama' and 'kode_user'
+        $users = DB::table('t_user')
+            ->select(
+                't_user.code AS value',
+                't_user.nama',
+                DB::raw('CONCAT(t_user.nama, " - ", t_user.code, " - ", lampiran.unit) AS label'),
+                'lampiran.no_spp',
+                'lampiran.tanggal_spp',
+                'lampiran.unit',
+                'lampiran.status_karyawan',
+                'lampiran.hutang AS nilai_pokok',
+                DB::raw('lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) AS sisa_sht')
+            )
+            ->leftJoin('lampiran', 't_user.code', '=', 'lampiran.code')
+            ->leftJoin('transactions', 't_user.code', '=', 'transactions.code')
+            ->where(function ($query) use ($term) {
+                $query->where('t_user.code', 'like', "%$term%")
+                    ->orWhere('t_user.nama', 'like', "%$term%")
+                    ->orWhere('lampiran.unit', 'like', "%$term%");
+            })
+            ->groupBy('t_user.code', 't_user.nama', 'lampiran.no_spp', 'lampiran.status_karyawan', 'lampiran.hutang', 'lampiran.tanggal_spp', 'lampiran.unit')
+            ->get();
+
+        return response()->json($users);
 
     }
+
+
 
 
     public function monitor(Request $request)
