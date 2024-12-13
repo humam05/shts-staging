@@ -55,6 +55,7 @@ class AdminController extends Controller
                 }
             }
 
+
             // Filter by 'status'
 
 
@@ -83,6 +84,9 @@ class AdminController extends Controller
     }
 
 
+          
+
+
         $users = $query->groupBy(
             't_user.nama',
             't_user.code',
@@ -94,10 +98,10 @@ class AdminController extends Controller
         )
             ->get();
 
-        // dd($users);
         $totalHutang = $users->sum('hutang');
         $totalPencicilan = $users->sum('total_pembayaran');
         $totalSisaSht = $users->sum('sisa_sht');
+
 
         if ($request->has('export') && $request->get('export') == 'excel') {
             $filters = $request->only(['status_lunas', 'status', 'unit', 'tahun', 'bulan', 'sort_tanggal']);
@@ -106,10 +110,10 @@ class AdminController extends Controller
     
         // Fetch filter options for units, statuses, years, and months
         $units = DB::table('lampiran')->select('unit')->distinct()->get();
+
         $status = Lampiran::select('status_karyawan')->distinct()->get();
         $years = Lampiran::selectRaw('YEAR(tanggal_spp) as year')->distinct()->pluck('year');
         $months = Lampiran::selectRaw('MONTH(tanggal_spp) as month')->distinct()->pluck('month');
-
 
         // Return the view with the necessary data
         return view('admin.admin', compact(
