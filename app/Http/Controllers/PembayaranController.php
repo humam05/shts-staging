@@ -19,52 +19,43 @@ class PembayaranController extends Controller
 
     public function index(Request $request)
     {
-        $getUser = DB::table('t_user')->select('t_user.code,t_user.nama,lampiran.no_spp,lampiran.status_karyawan,lampiran.hutang AS nilai_pokok,
-         SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) AS total_pencicilan, 
-         lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) AS sisa_sht')
-         ->leftJoin('lampiran', 't_user.code', '=', 'lampiran.code') 
-         ->leftJoin('transactions', 't_user.code', '=', 'transactions.code')
-         ->groupBy('t.user.code')
-         ->get();
 
-         $data = $getUser->toArray();
-
-
-        dd($data);
-
-        return view('admin.pembayaran', compact('data'));
+        return view('admin.pembayaran');
     }
+
+
 
     public function autocomplete(Request $request)
     {
-        $term = $request->get('term', '');
+        $term = $request->get('term');
 
-       
-        
+        // Search for both 'nama' and 'kode_user'
+        $users = DB::table('t_user')
+            ->select(
+                't_user.code AS value',
+                't_user.nama',
+                DB::raw('CONCAT(t_user.nama, " - ", t_user.code, " - ", lampiran.unit) AS label'),
+                'lampiran.no_spp',
+                'lampiran.tanggal_spp',
+                'lampiran.unit',
+                'lampiran.status_karyawan',
+                'lampiran.hutang AS nilai_pokok',
+                DB::raw('lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) AS sisa_sht')
+            )
+            ->leftJoin('lampiran', 't_user.code', '=', 'lampiran.code')
+            ->leftJoin('transactions', 't_user.code', '=', 'transactions.code')
+            ->where(function ($query) use ($term) {
+                $query->where('t_user.code', 'like', "%$term%")
+                    ->orWhere('t_user.nama', 'like', "%$term%")
+                    ->orWhere('lampiran.unit', 'like', "%$term%");
+            })
+            ->groupBy('t_user.code', 't_user.nama', 'lampiran.no_spp', 'lampiran.status_karyawan', 'lampiran.hutang', 'lampiran.tanggal_spp', 'lampiran.unit')
+            ->get();
 
-//         $query = "
-//           SELECT u.code,u.nama,l.no_spp,l.status_karyawan,l.hutang AS nilai_pokok, SUM(t.pencicilan_rutin + t.pencicilan_bertahap) AS total_pencicilan, l.hutang - SUM(t.pencicilan_rutin + t.pencicilan_bertahap) AS sisa_sht,
-// CASE
-// 	WHEN l.hutang - SUM(t.pencicilan_rutin + t.pencicilan_bertahap) <= 0 THEN 'Lunas'
-// 	ELSE 'Belum Lunas'
-// 	END AS status_lunas
-// FROM
-// 	t_user u
-// LEFT JOIN
-// 	lampiran l ON l.code = u.code
-// LEFT JOIN
-// 	transactions t ON t.code = u.code
-// WHERE
-// 	u.code LIKE :term
-// GROUP BY
-// 	u.code, l.code
-// LIMIT 10
-//         ";
-
-        // $results = DB::select(DB::raw($query), ['term' => '%' . $term . '%']);
-
-        // return response()->json($results);
+        return response()->json($users);
     }
+
+
 
 
     public function monitor(Request $request)

@@ -56,6 +56,8 @@ class AdminController extends Controller
             }
 
             // Filter by 'status'
+
+
     if ($request->has('status') && $request->status) {
         $query->where('lampiran.status_karyawan', $request->status);
     }
@@ -258,30 +260,37 @@ class AdminController extends Controller
     // Proses tambah transaksi
     public function storeTransaction(Request $request)
     {
-        // Validasi input untuk memastikan kode_user ada di database users
+        // Validasi input untuk memastikan kode_user ada di database dan pencicilan ada nilainya
         $data = $request->validate([
-            'kode_user' => 'required|exists:users,kode_user',
-            'pencicilan_rutin' => 'required',
-            'pencicilan_bertahap' => 'required',
+            'kode_user' => 'required|array',  // Pastikan kode_user adalah array
+            'kode_user.*' => 'required|exists:t_user,code',  // Validasi setiap kode_user harus ada di tabel t_user
+            'pencicilan_rutin' => 'required|array',
+            'pencicilan_rutin.*' => 'required|numeric',  // Validasi setiap pencicilan_rutin harus angka
+            'pencicilan_bertahap' => 'required|array',
+            'pencicilan_bertahap.*' => 'required|numeric',  // Validasi setiap pencicilan_bertahap harus angka
         ]);
-
-        // Cari user berdasarkan kode_user
-        $user = User::where('kode_user', $data['kode_user'])->firstOrFail();
-
-        // Siapkan data transaksi
-        // bulan dan year kita set otomatis dari tanggal saat ini
-        $transactionData = [
-            'user_id' => $user->id,
-            'bulan' => (int) date('n'), // Akan menghasilkan integer untuk bulan ini
-            'year' => (int) date('Y'),
-            'pencicilan_rutin' => $data['pencicilan_rutin'],
-            'pencicilan_bertahap' => $data['pencicilan_bertahap'],
-        ];
-
-        // Simpan data transaksi
-        Transaction::create($transactionData);
-
+    
+        // Menyimpan data transaksi
+        $transactions = [];
+    
+        foreach ($data['kode_user'] as $index => $kodeUser) {
+            $transactionData = [
+                'code' => $kodeUser,
+                'bulan' => (int) date('n'), // Bulan sekarang
+                'year' => (int) date('Y'),  // Tahun sekarang
+                'pencicilan_rutin' => str_replace(',', '', $data['pencicilan_rutin'][$index]),  // Hapus koma di nilai pencicilan
+                'pencicilan_bertahap' => str_replace(',', '', $data['pencicilan_bertahap'][$index]), // Hapus koma di nilai pencicilan bertahap
+            ];
+    
+            // Simpan data transaksi
+            $transactions[] = $transactionData;
+        }
+    
+        // Batch insert transaksi
+        Transaction::insert($transactions);
+    
         // Redirect atau kembali dengan pesan sukses
-        return redirect()->route('admin.transactions', $user->id)->with('success', 'Transaksi berhasil ditambahkan.');
+        return redirect()->route('admin.form.pembayaran')->with('success', 'Transaksi berhasil ditambahkan.');
     }
+    
 }
