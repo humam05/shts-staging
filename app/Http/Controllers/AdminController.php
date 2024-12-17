@@ -33,7 +33,7 @@ class AdminController extends Controller
                 'lampiran.status_karyawan',
                 DB::raw('lampiran.hutang as hutang'),
                 DB::raw('SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) as total_pembayaran'),
-                DB::raw('lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) as sisa_sht')
+                DB::raw('lampiran.hutang - COALESCE(SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap), 0) as sisa_sht')
             )
             ->leftJoin('transactions', 't_user.code', '=', 'transactions.code')
             ->leftJoin('lampiran', 't_user.code', '=', 'lampiran.code');

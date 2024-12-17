@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthController;
 
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MasterDataController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\RekapController;
 use App\Http\Controllers\UserController;
@@ -63,4 +64,16 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/transactions/{transaction}/edit', [AdminController::class, 'editTransaction'])->name('admin.transactions.edit');
     Route::put('/transactions/{transaction}', [AdminController::class, 'updateTransaction'])->name('admin.transactions.update');
     Route::delete('/transactions/{transaction}', [AdminController::class, 'deleteTransaction'])->name('admin.transactions.delete');
+
+    //Master Data Panel
+    Route::get('/data-panel', [MasterDataController::class, 'index'])->name('admin.masterdata');
+    Route::get('/data-panel/detail/{code}', [MasterDataController::class, 'detail'])->name('admin.masterdata.detail');
+    Route::get('/data-panel/create', [MasterDataController::class, 'create'])->name('admin.masterdata.create');
+    Route::post('/data-panel/create', [MasterDataController::class, 'store'])->name('admin.masterdata.store');
+    Route::get('/data-panel/edit/{code}', [MasterDataController::class, 'edit'])->name('admin.masterdata.edit');
+    Route::put('/data-panel/edit/{code}', [MasterDataController::class, 'update'])->name('admin.masterdata.update');
+    Route::get('/data-panel/autocomplete', [MasterDataController::class, 'autocomplete'])->name('admin.masterdata.autocomplete');
+    Route::get('/data-panel/autocomplete_status', [MasterDataController::class, 'status_autocomplete'])->name('admin.masterdata.autocomplete.status');
+    Route::get('/data-panel/edit/transactions/{id}', [MasterDataController::class, 'editTransactions'])->name('admin.masterdata.edit.transactions');
+    Route::put('/data-panel/transactions/{id}', [MasterDataController::class, 'updateTransactions'])->name('admin.masterdata.update.transactions');
 });
