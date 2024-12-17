@@ -9,44 +9,81 @@
                 <div id="dynamicFields">
                     <!-- Initial Row -->
                     <div class="payment-row mb-6 card shadow-md rounded-lg p-6">
-                        <!-- Kode User (Autocomplete) -->
-                        <div class="mb-4">
-                            <label for="kode_user[]" class="text-lg font-medium text-gray-700 mb-2">Kode User</label>
-                            <input type="text" name="kode_user[]"
-                                class="kode_user w-full px-4 py-2 border border-gray-300 rounded-md text-lg"
-                                placeholder="Masukkan kode user atau nama">
-                        </div>
+                        <div class="flex flex-wrap justify-between space-x-4">
+                            <!-- Left Section -->
+                            <div class="flex-1 space-y-4">
+                                <!-- Kode User (Autocomplete) -->
+                                <div class="mb-4">
+                                    <label for="kode_user[]" class="text-lg font-medium text-gray-700 mb-2">Kode
+                                        User</label>
+                                    <input type="text" name="kode_user[]"
+                                        class="kode_user w-full px-4 py-2 border border-gray-300 rounded-md text-lg"
+                                        placeholder="Masukkan kode user atau nama">
+                                </div>
 
-                        <!-- Nama -->
-                        <div class="mb-4">
-                            <label for="nama[]" class="text-lg font-medium text-gray-700 mb-2">Nama</label>
-                            <input type="text" name="nama[]"
-                                class="nama w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed"
-                                readonly>
-                        </div>
+                                <!-- Pencicilan Rutin -->
+                                <div class="mb-4">
+                                    <label for="pencicilan_rutin[]"
+                                        class="text-lg font-medium text-gray-700 mb-2">Pencicilan Rutin</label>
+                                    <input type="number" name="pencicilan_rutin[]"
+                                        class="pencicilan_rutin w-full px-4 py-2 border border-gray-300 rounded-md text-lg"
+                                        placeholder="Nominal pencicilan rutin">
+                                </div>
 
-                        <!-- No SPP -->
-                        <div class="mb-4">
-                            <label for="no_spp[]" class="text-lg font-medium text-gray-700 mb-2">No SPP</label>
-                            <input type="text" name="no_spp[]"
-                                class="no_spp w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed"
-                                readonly>
-                        </div>
+                                <!-- Pencicilan Bertahap -->
+                                <div class="mb-4">
+                                    <label for="pencicilan_bertahap[]"
+                                        class="text-lg font-medium text-gray-700 mb-2">Pencicilan Bertahap</label>
+                                    <input type="number" name="pencicilan_bertahap[]"
+                                        class="pencicilan_bertahap w-full px-4 py-2 border border-gray-300 rounded-md text-lg"
+                                        placeholder="Nominal pencicilan bertahap">
+                                </div>
+                            </div>
 
-                        <!-- Pencicilan Rutin -->
-                        <div class="mb-4">
-                            <label for="pencicilan_rutin[]" class="text-lg font-medium text-gray-700 mb-2">Pencicilan Rutin</label>
-                            <input type="number" name="pencicilan_rutin[]"
-                                class="pencicilan_rutin w-full px-4 py-2 border border-gray-300 rounded-md text-lg"
-                                placeholder="Nominal pencicilan rutin">
-                        </div>
+                            <!-- Right Section -->
+                            <div class="flex-1 space-y-4">
+                                <!-- Nama -->
+                                <div class="mb-4">
+                                    <label for="nama[]" class="text-lg font-medium text-gray-700 mb-2">Nama</label>
+                                    <input type="text" name="nama[]"
+                                        class="nama w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed"
+                                        readonly>
+                                </div>
 
-                        <!-- Pencicilan Bertahap -->
-                        <div class="mb-4">
-                            <label for="pencicilan_bertahap[]" class="text-lg font-medium text-gray-700 mb-2">Pencicilan Bertahap</label>
-                            <input type="number" name="pencicilan_bertahap[]"
-                                class="pencicilan_bertahap w-full px-4 py-2 border border-gray-300 rounded-md text-lg"
-                                placeholder="Nominal pencicilan bertahap">
+                                <!-- No SPP -->
+                                <div class="mb-4">
+                                    <label for="no_spp[]" class="text-lg font-medium text-gray-700 mb-2">No SPP</label>
+                                    <input type="text" name="no_spp[]"
+                                        class="no_spp w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed"
+                                        readonly>
+                                </div>
+
+                                <!-- Tanggal SPP -->
+                                <div class="mb-4">
+                                    <label for="tanggal_spp[]" class="text-lg font-medium text-gray-700 mb-2">Tanggal
+                                        SPP</label>
+                                    <input type="text" name="tanggal_spp[]"
+                                        class="tanggal_spp w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed"
+                                        readonly>
+                                </div>
+
+                                <!-- Nilai Pokok -->
+                                <div class="mb-4">
+                                    <label for="nilai_pokok[]" class="text-lg font-medium text-gray-700 mb-2">Nilai
+                                        Pokok</label>
+                                    <input type="text" name="nilai_pokok[]"
+                                        class="nilai_pokok w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed"
+                                        readonly>
+                                </div>
+
+                                <!-- Sisa SHT -->
+                                <div class="mb-4">
+                                    <label for="sisa_sht[]" class="text-lg font-medium text-gray-700 mb-2">Sisa SHT</label>
+                                    <input type="text" name="sisa_sht[]"
+                                        class="sisa_sht w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed"
+                                        readonly>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Remove Row Button -->
@@ -91,32 +128,53 @@
             newRow.classList.add('payment-row', 'mb-6', 'card', 'shadow-md', 'rounded-lg', 'p-6');
 
             newRow.innerHTML = `
-            <div class="mb-4">
-                <label for="kode_user[]" class="text-lg font-medium text-gray-700 mb-2">Kode User</label>
-                <input type="text" name="kode_user[]" class="kode_user w-full px-4 py-2 border border-gray-300 rounded-md text-lg" placeholder="Masukkan kode user atau nama">
-            </div>
-            <div class="mb-4">
-                <label for="nama[]" class="text-lg font-medium text-gray-700 mb-2">Nama</label>
-                <input type="text" name="nama[]" class="nama w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed">
-            </div>
-            <div class="mb-4">
-                <label for="no_spp[]" class="text-lg font-medium text-gray-700 mb-2">No SPP</label>
-                <input type="text" name="no_spp[]" class="no_spp w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed">
-            </div>
-            <div class="mb-4">
-                <label for="pencicilan_rutin[]" class="text-lg font-medium text-gray-700 mb-2">Pencicilan Rutin</label>
-                <input type="number" name="pencicilan_rutin[]" class="pencicilan_rutin w-full px-4 py-2 border border-gray-300 rounded-md text-lg" placeholder="Nominal pencicilan rutin">
-            </div>
-            <div class="mb-4">
-                <label for="pencicilan_bertahap[]" class="text-lg font-medium text-gray-700 mb-2">Pencicilan Bertahap</label>
-                <input type="number" name="pencicilan_bertahap[]" class="pencicilan_bertahap w-full px-4 py-2 border border-gray-300 rounded-md text-lg" placeholder="Nominal pencicilan bertahap">
-            </div>
-            <div class="flex justify-end">
-                <button type="button" class="text-red-600 hover:text-red-800 text-lg" onclick="removePaymentRow(this)">
-                    <i class="fas fa-trash-alt mr-2"></i> Hapus Baris
-                </button>
-            </div>
-        `;
+                <div class="flex flex-wrap justify-between space-x-4">
+                    <!-- Left Section -->
+                    <div class="flex-1 space-y-4">
+                        <div class="mb-4">
+                            <label for="kode_user[]" class="text-lg font-medium text-gray-700 mb-2">Kode User</label>
+                            <input type="text" name="kode_user[]" class="kode_user w-full px-4 py-2 border border-gray-300 rounded-md text-lg" placeholder="Masukkan kode user atau nama">
+                        </div>
+                        <div class="mb-4">
+                            <label for="pencicilan_rutin[]" class="text-lg font-medium text-gray-700 mb-2">Pencicilan Rutin</label>
+                            <input type="number" name="pencicilan_rutin[]" class="pencicilan_rutin w-full px-4 py-2 border border-gray-300 rounded-md text-lg" placeholder="Nominal pencicilan rutin">
+                        </div>
+                        <div class="mb-4">
+                            <label for="pencicilan_bertahap[]" class="text-lg font-medium text-gray-700 mb-2">Pencicilan Bertahap</label>
+                            <input type="number" name="pencicilan_bertahap[]" class="pencicilan_bertahap w-full px-4 py-2 border border-gray-300 rounded-md text-lg" placeholder="Nominal pencicilan bertahap">
+                        </div>
+                    </div>
+
+                    <!-- Right Section -->
+                    <div class="flex-1 space-y-4">
+                        <div class="mb-4">
+                            <label for="nama[]" class="text-lg font-medium text-gray-700 mb-2">Nama</label>
+                            <input type="text" name="nama[]" class="nama w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed">
+                        </div>
+                        <div class="mb-4">
+                            <label for="no_spp[]" class="text-lg font-medium text-gray-700 mb-2">No SPP</label>
+                            <input type="text" name="no_spp[]" class="no_spp w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed">
+                        </div>
+                        <div class="mb-4">
+                            <label for="tanggal_spp[]" class="text-lg font-medium text-gray-700 mb-2">Tanggal SPP</label>
+                            <input type="text" name="tanggal_spp[]" class="tanggal_spp w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed">
+                        </div>
+                        <div class="mb-4">
+                            <label for="nilai_pokok[]" class="text-lg font-medium text-gray-700 mb-2">Nilai Pokok</label>
+                            <input type="text" name="nilai_pokok[]" class="nilai_pokok w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed">
+                        </div>
+                        <div class="mb-4">
+                            <label for="sisa_sht[]" class="text-lg font-medium text-gray-700 mb-2">Sisa SHT</label>
+                            <input type="text" name="sisa_sht[]" class="sisa_sht w-full px-4 py-2 border border-gray-300 rounded-md bg-gray-100 text-lg cursor-not-allowed">
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end">
+                    <button type="button" class="text-red-600 hover:text-red-800 text-lg" onclick="removePaymentRow(this)">
+                        <i class="fas fa-trash-alt mr-2"></i> Hapus Baris
+                    </button>
+                </div>
+            `;
             dynamicFields.appendChild(newRow);
 
             // Apply autocomplete to the new "kode_user" input field
@@ -154,9 +212,13 @@
                     $(this).val(ui.item.value); // Set value (kode_user)
                     $(this).closest('.payment-row').find('.nama').val(ui.item.data.nama);
                     $(this).closest('.payment-row').find('.no_spp').val(ui.item.data.no_spp);
+                    $(this).closest('.payment-row').find('.tanggal_spp').val(ui.item.data.tanggal_spp);
+                    $(this).closest('.payment-row').find('.nilai_pokok').val(ui.item.data.nilai_pokok);
+                    $(this).closest('.payment-row').find('.sisa_sht').val(ui.item.data.sisa_sht);
                 },
                 open: function() {
                     // Style the autocomplete dropdown to make it more accessible and organized
+                    var inputWidth = $(this).outerWidth();
                     $(".ui-autocomplete").css({
                         "max-height": "250px", // Set a max height for the dropdown
                         "overflow-y": "auto", // Enable vertical scrolling if list exceeds max height
@@ -164,32 +226,30 @@
                         "background-color": "white", // Set background color for contrast
                         "border": "1px solid #ddd", // Add a subtle border for visibility
                         "box-shadow": "0 2px 5px rgba(0,0,0,0.15)", // Optional: Add a shadow for better contrast
-                        "width": "auto", // Let the dropdown fit the content width
-                        "min-width": "200px", // Set a minimum width to ensure readability for smaller items
+                        "width": inputWidth + "px", // Set the width to match the input field width
+                        "max-width": inputWidth +
+                        "px", // Ensure the dropdown doesn't exceed the input width
                     });
 
-                    // Style each item in the autocomplete dropdown
                     $(".ui-menu-item").css({
-                        "padding": "10px 15px", // Add padding to each item for better click area
-                        "font-size": "16px", // Ensure the font size matches the input text size
-                        "cursor": "pointer", // Change cursor to pointer to indicate it's clickable
+                        "padding": "10px 15px",
+                        "font-size": "16px",
+                        "cursor": "pointer",
                     });
 
-                    // Add a separator between each item
                     $(".ui-menu-item").not(":last-child").css({
-                        "border-bottom": "1px solid #ddd" // Add a light separator between items
+                        "border-bottom": "1px solid #ddd"
                     });
 
-                    // Optional: Style for hover state for better interaction feedback
                     $(".ui-menu-item").hover(function() {
                         $(this).css({
-                            "background-color": "#f0f0f0", // Change background color on hover
-                            "color": "#333" // Ensure text color changes for contrast
+                            "background-color": "#f0f0f0",
+                            "color": "#333"
                         });
                     }, function() {
                         $(this).css({
-                            "background-color": "white", // Reset background color when hover is removed
-                            "color": "#000" // Reset text color
+                            "background-color": "white",
+                            "color": "#000"
                         });
                     });
                 }

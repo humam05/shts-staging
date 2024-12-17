@@ -57,6 +57,9 @@
                                     </a>
                                 </div>
                             </div>
+
+                            <a href="{{ route('admin.masterdata') }}"
+                                class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Master Data Panel</a>
                         @elseif (Auth::user()->role === 'user')
                         <a href="{{ route('user.home') }}"
                         class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Home</a>
