@@ -8,21 +8,6 @@
 
 @section('content')
     <div class="w-full">
-        {{-- <!-- Dashboard Header -->
-        <div class="flex items-center justify-between py-6">
-            <h2 class="text-2xl font-semibold text-gray-700">Dashboard Admin</h2>
-            <div class="flex space-x-4">
-                <a href="{{ route('admin.users.create') }}"
-                    class="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                    </svg>
-                    Tambah User
-                </a>
-            </div>
-        </div> --}}
-
         <!-- Filter Status Karyawan -->
         <div class="bg-white shadow rounded-lg p-6 mb-6">
             <h2 class="text-xl font-semibold text-gray-700 mb-6">Filter Pencarian</h2>
@@ -73,43 +58,16 @@
 
                     <!-- Filter Tahun (from tanggal_spp) -->
                     <div>
-                        <label for="tahun" class="block text-sm font-medium text-gray-700 mb-2">Tahun</label>
-                        <select name="tahun" id="tahun"
+                        <label for="awal_spp" class="block text-sm font-medium text-gray-700 mb-2">Awal Periode SPP</label>
+                        <input type="month" name="awal_spp" id="awal_spp" value="{{ request('awal_spp') }}"
                             class="border border-gray-300 rounded-lg w-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">Pilih Tahun</option>
-                            @foreach ($years as $year)
-                                <option value="{{ $year }}" {{ request('tahun') == $year ? 'selected' : '' }}>
-                                    {{ $year }}
-                                </option>
-                            @endforeach
-                        </select>
                     </div>
 
                     <!-- Filter Bulan (from tanggal_spp) -->
                     <div>
-                        <label for="bulan" class="block text-sm font-medium text-gray-700 mb-2">Bulan</label>
-                        <select name="bulan" id="bulan"
+                        <label for="akhir_spp" class="block text-sm font-medium text-gray-700 mb-2">Akhir Periode SPP</label>
+                        <input type="month" name="akhir_spp" id="akhir_spp" value="{{ request('akhir_spp') }}"
                             class="border border-gray-300 rounded-lg w-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">Pilih Bulan</option>
-                            @foreach ([
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember',
-        ] as $bulan => $namaBulan)
-                                <option value="{{ $bulan }}" {{ request('bulan') == $bulan ? 'selected' : '' }}>
-                                    {{ $namaBulan }}
-                                </option>
-                            @endforeach
-                        </select>
                     </div>
 
                     <!-- Sorting Tanggal -->
@@ -170,7 +128,7 @@
                             (Rp)</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Sisa SHT
                         </th>
-                        <th class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Aksi</th>
+                        <th class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -200,11 +158,6 @@
                                 </span>
                             </td>
                         </tr>
-                        {{-- @php
-                            $nilaiSht += $user->lampiran->hutang;
-                            $pembayaran += $user->totalPencicilan;
-                            $sisaSht += $user->sisa_sht;
-                        @endphp --}}
                     @endforeach
                     @if ($users->isEmpty())
                         <tr>

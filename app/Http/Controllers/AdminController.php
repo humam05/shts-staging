@@ -7,6 +7,7 @@ use App\Models\Lampiran;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\UserModel;
+use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,14 @@ class AdminController extends Controller
 
     public function index(Request $request)
     {
+
+        $startDate = $request->input('awal_spp');
+        $endDate = $request->input('akhir_spp');
+
+        $start = Carbon::parse($startDate)->startOfMonth();
+
+        $end = Carbon::parse($endDate)->endOfMonth();
+
         $query = DB::table('t_user')
             ->select(
                 't_user.nama',
@@ -39,52 +48,47 @@ class AdminController extends Controller
             ->leftJoin('lampiran', 't_user.code', '=', 'lampiran.code');
 
 
-            if ($request->has('status_lunas')) {
-                if ($request->get('status_lunas') == 'Belum Lunas') {
-                    $query->having(
-                        DB::raw('lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap)'),
-                        '>',
-                        0
-                    );
-                } else if ($request->get('status_lunas') == 'Lunas') {
-                    $query->having(
-                        DB::raw('lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap)'),
-                        '=',
-                        0
-                    );
-                }
+        if ($request->has('status_lunas')) {
+            if ($request->get('status_lunas') == 'Belum Lunas') {
+                $query->having(
+                    DB::raw('lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap)'),
+                    '>',
+                    0
+                );
+            } else if ($request->get('status_lunas') == 'Lunas') {
+                $query->having(
+                    DB::raw('lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap)'),
+                    '=',
+                    0
+                );
             }
+        }
 
 
-            // Filter by 'status'
+        if ($request->has('status') && $request->status) {
+            $query->where('lampiran.status_karyawan', $request->status);
+        }
 
+        // Filter by 'unit'
+        if ($request->has('unit') && $request->unit) {
+            $query->where('lampiran.unit', $request->unit);
+        }
 
-    if ($request->has('status') && $request->status) {
-        $query->where('lampiran.status_karyawan', $request->status);
-    }
+        // Sort by 'sort_tanggal' (date)
+        if ($request->has('sort_tanggal') && in_array($request->sort_tanggal, ['asc', 'desc'])) {
+            $query->orderBy('lampiran.tanggal_spp', $request->sort_tanggal);
+        }
 
-    // Filter by 'unit'
-    if ($request->has('unit') && $request->unit) {
-        $query->where('lampiran.unit', $request->unit);
-    }
+        if ($startDate) {
+            $start = Carbon::parse($startDate)->startOfMonth();
+            $query->where('lampiran.tanggal_spp', '>=', $start);
+        }
 
-    // Filter by 'tahun' (year)
-    if ($request->has('tahun') && $request->tahun) {
-        $query->whereYear('lampiran.tanggal_spp', $request->tahun);
-    }
-
-    // Filter by 'bulan' (month)
-    if ($request->has('bulan') && $request->bulan) {
-        $query->whereMonth('lampiran.tanggal_spp', $request->bulan);
-    }
-
-    // Sort by 'sort_tanggal' (date)
-    if ($request->has('sort_tanggal') && in_array($request->sort_tanggal, ['asc', 'desc'])) {
-        $query->orderBy('lampiran.tanggal_spp', $request->sort_tanggal);
-    }
-
-
-          
+        // Jika 'akhir_spp' diatur, terapkan filter tanggal akhir
+        if ($endDate) {
+            $end = Carbon::parse($endDate)->endOfMonth();
+            $query->where('lampiran.tanggal_spp', '<=', $end);
+        }
 
 
         $users = $query->groupBy(
@@ -104,22 +108,18 @@ class AdminController extends Controller
 
 
         if ($request->has('export') && $request->get('export') == 'excel') {
-            $filters = $request->only(['status_lunas', 'status', 'unit', 'tahun', 'bulan', 'sort_tanggal']);
+            $filters = $request->only(['status_lunas', 'status', 'unit', 'sort_tanggal', 'awal_spp', 'akhir_spp']);
             return Excel::download(new RekapExport($filters), 'users_data.xlsx');
-        }            
-    
+        }
+
         // Fetch filter options for units, statuses, years, and months
         $units = DB::table('lampiran')->select('unit')->distinct()->get();
 
         $status = Lampiran::select('status_karyawan')->distinct()->get();
-        $years = Lampiran::selectRaw('YEAR(tanggal_spp) as year')->distinct()->pluck('year');
-        $months = Lampiran::selectRaw('MONTH(tanggal_spp) as month')->distinct()->pluck('month');
 
         // Return the view with the necessary data
         return view('admin.admin', compact(
             'users',
-            'years',
-            'months',
             'totalHutang',
             'totalPencicilan',
             'totalSisaSht',
@@ -273,10 +273,10 @@ class AdminController extends Controller
             'pencicilan_bertahap' => 'required|array',
             'pencicilan_bertahap.*' => 'required|numeric',  // Validasi setiap pencicilan_bertahap harus angka
         ]);
-    
+
         // Menyimpan data transaksi
         $transactions = [];
-    
+
         foreach ($data['kode_user'] as $index => $kodeUser) {
             $transactionData = [
                 'code' => $kodeUser,
@@ -285,16 +285,15 @@ class AdminController extends Controller
                 'pencicilan_rutin' => str_replace(',', '', $data['pencicilan_rutin'][$index]),  // Hapus koma di nilai pencicilan
                 'pencicilan_bertahap' => str_replace(',', '', $data['pencicilan_bertahap'][$index]), // Hapus koma di nilai pencicilan bertahap
             ];
-    
+
             // Simpan data transaksi
             $transactions[] = $transactionData;
         }
-    
+
         // Batch insert transaksi
         Transaction::insert($transactions);
-    
+
         // Redirect atau kembali dengan pesan sukses
         return redirect()->route('admin.form.pembayaran')->with('success', 'Transaksi berhasil ditambahkan.');
     }
-    
 }

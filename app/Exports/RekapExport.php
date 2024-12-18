@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -24,6 +25,14 @@ class RekapExport implements FromCollection, WithHeadings, WithStyles
     */
     public function collection()
     {
+
+        $startDate = $this->filters['awal_spp']; 
+        $endDate = $this->filters['akhir_spp']; 
+
+        $start = Carbon::parse($startDate)->startOfMonth(); 
+
+        $end = Carbon::parse($endDate)->endOfMonth(); 
+
         $query = DB::table('t_user')
             ->select(
                 't_user.nama',
@@ -34,7 +43,7 @@ class RekapExport implements FromCollection, WithHeadings, WithStyles
                 'lampiran.status_karyawan',
                 DB::raw('lampiran.hutang as hutang'),
                 DB::raw('SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) as total_pembayaran'),
-                DB::raw('lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) as sisa_sht')
+                DB::raw('lampiran.hutang - COALESCE(SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap), 0) as sisa_sht')
             )
             ->leftJoin('transactions', 't_user.code', '=', 'transactions.code')
             ->leftJoin('lampiran', 't_user.code', '=', 'lampiran.code');
@@ -56,9 +65,15 @@ class RekapExport implements FromCollection, WithHeadings, WithStyles
             }
         }
 
-        // if (isset($this->filters['status'])) {
-        //     $query->where('lampiran.status_karyawan', $this->filters['status']);
-        // }
+        if ($startDate) {
+            $start = Carbon::parse($startDate)->startOfMonth();
+            $query->where('lampiran.tanggal_spp', '>=', $start);
+        }
+    
+        if ($endDate) {
+            $end = Carbon::parse($endDate)->endOfMonth();
+            $query->where('lampiran.tanggal_spp', '<=', $end);
+        }
 
         if (isset($this->filters['status']) && $this->filters['status']) {
             $query->where('lampiran.status_karyawan', $this->filters['status']);
@@ -67,14 +82,6 @@ class RekapExport implements FromCollection, WithHeadings, WithStyles
 
         if (isset($this->filters['unit']) && $this->filters['unit']) {
             $query->where('lampiran.unit', $this->filters['unit']);
-        }
-
-        if (isset($this->filters['tahun'])) {
-            $query->whereYear('lampiran.tanggal_spp', $this->filters['tahun']);
-        }
-
-        if (isset($this->filters['bulan'])) {
-            $query->whereMonth('lampiran.tanggal_spp', $this->filters['bulan']);
         }
 
         if (isset($this->filters['sort_tanggal'])) {
@@ -101,9 +108,9 @@ class RekapExport implements FromCollection, WithHeadings, WithStyles
             'No. SPP',
             'Unit',
             'Status Karyawan',
-            'Hutang',
+            'Nilai SHT',
             'Total Pembayaran',
-            'Sisa Hutang'
+            'Sisa SHT'
         ];
     }
 
