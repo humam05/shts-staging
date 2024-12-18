@@ -17,10 +17,11 @@
             </div>
         @endif
 
-        <h1>Detail Transaksi, {{$user->nama}}</h1>
+        
         
         <!-- Transactions Table -->
         <div class="overflow-x-auto">
+            <h1 class="flex items-center text-3xl font-bold mb-5 text-gray-700">Detail Transaksi, {{$user->nama}}</h1>
             <table id="transactionsTable" class="min-w-full bg-white border border-gray-200">
                 <thead>
                     <tr>

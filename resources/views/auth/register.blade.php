@@ -6,9 +6,9 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-100">
     <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
         <h2 class="text-2xl font-semibold text-center mb-4">Buat Akun Baru</h2>
-        <p class="text-center text-gray-600 mb-6">Bergabunglah dengan komunitas kami! Isi form di bawah untuk mendaftar.</p>
+        {{-- <p class="text-center text-gray-600 mb-6">Bergabunglah dengan komunitas kami! Isi form di bawah untuk mendaftar.</p> --}}
         <!-- Tambahkan x-data untuk Alpine.js -->
-        <form method="POST" action="/register" class="space-y-4" x-data="{ showPassword: false, showPasswordConfirm: false }">
+        <form method="POST" action="{{ route('post.register') }}"" class="space-y-4" x-data="{ showPassword: false, showPasswordConfirm: false }">
             @csrf
 
             <!-- Kode Pengguna -->

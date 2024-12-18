@@ -60,7 +60,7 @@ class AuthController extends Controller
 
         User::create($data);
 
-        return redirect('/login')->with('success', 'Registrasi berhasil. Silakan login.');
+        return redirect()->route('admin.masterdata.manage_user')->with('success', 'Tambah User berhasil.');
     }
 
     // Logout

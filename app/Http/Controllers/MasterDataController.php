@@ -62,35 +62,35 @@ class MasterDataController extends Controller
     }
 
     public function detail($code)
-{
-    $data = DB::table('transactions')
-        ->select(
-            'transactions.id',
-            'transactions.code',
-            'transactions.bulan',
-            'transactions.year',
-            'transactions.pencicilan_rutin',
-            'transactions.pencicilan_bertahap',
-        )
-        ->leftJoin('t_user', 't_user.code', '=', 'transactions.code')
-        ->where('transactions.code', $code)
-        ->groupBy(
-            'transactions.id',
-            'transactions.code',
-            'transactions.bulan',
-            'transactions.year',
-            'transactions.pencicilan_rutin',
-            'transactions.pencicilan_bertahap',           
-        )
-        ->orderBy('transactions.bulan', 'ASC')  // Urutkan berdasarkan bulan secara ascending
-        ->orderBy('transactions.year', 'ASC')   // Urutkan berdasarkan tahun secara ascending
-        
-        ->get();
+    {
+        $data = DB::table('transactions')
+            ->select(
+                'transactions.id',
+                'transactions.code',
+                'transactions.bulan',
+                'transactions.year',
+                'transactions.pencicilan_rutin',
+                'transactions.pencicilan_bertahap',
+            )
+            ->leftJoin('t_user', 't_user.code', '=', 'transactions.code')
+            ->where('transactions.code', $code)
+            ->groupBy(
+                'transactions.id',
+                'transactions.code',
+                'transactions.bulan',
+                'transactions.year',
+                'transactions.pencicilan_rutin',
+                'transactions.pencicilan_bertahap',
+            )
+            ->orderBy('transactions.bulan', 'ASC')  // Urutkan berdasarkan bulan secara ascending
+            ->orderBy('transactions.year', 'ASC')   // Urutkan berdasarkan tahun secara ascending
 
-        $user = DB::table('t_user')->select('nama')->where('code',$code)->first();
+            ->get();
 
-    return view('admin.panel.detail', compact('data', 'user'));
-}
+        $user = DB::table('t_user')->select('nama')->where('code', $code)->first();
+
+        return view('admin.panel.detail', compact('data', 'user'));
+    }
 
 
     public function update(Request $request, $code)
@@ -154,32 +154,36 @@ class MasterDataController extends Controller
     public function editTransactions($id)
     {
         $transactions = DB::table('transactions')
-        ->where('id', $id)->first();
+            ->where('id', $id)->first();
         return view('admin.panel.edit_transaction', compact('transactions'));
     }
 
     public function updateTransactions(Request $request, $id)
-{
-    // Validasi data yang diinput
-    $request->validate([
-        'bulan' => 'required',
-        'year' => 'required|integer|min:2000|max:2100',
-        'pencicilan_rutin' => 'required',
-        'pencicilan_bertahap' => 'required',
-    ]);
-
-    // Update data transaksi
-    DB::table('transactions')
-        ->where('id', $id)
-        ->update([
-            'bulan' => $request->bulan,
-            'year' => $request->year,
-            'pencicilan_rutin' => $request->pencicilan_rutin,
-            'pencicilan_bertahap' => $request->pencicilan_bertahap,
+    {
+        // Validasi data yang diinput
+        $request->validate([
+            'bulan' => 'required',
+            'year' => 'required|integer|min:2000|max:2100',
+            'pencicilan_rutin' => 'required',
+            'pencicilan_bertahap' => 'required',
         ]);
 
-    // Redirect kembali dengan pesan sukses
-    return redirect()->route('admin.masterdata.edit.transactions', $id)->with('success', 'Transaksi berhasil diperbarui.');
-}
+        // Update data transaksi
+        DB::table('transactions')
+            ->where('id', $id)
+            ->update([
+                'bulan' => $request->bulan,
+                'year' => $request->year,
+                'pencicilan_rutin' => $request->pencicilan_rutin,
+                'pencicilan_bertahap' => $request->pencicilan_bertahap,
+            ]);
 
+        // Redirect kembali dengan pesan sukses
+        return redirect()->route('admin.masterdata.edit.transactions', $id)->with('success', 'Transaksi berhasil diperbarui.');
+    }
+
+    public function manageUser() {
+        $user = DB::table('users')->get();
+        return view('admin.panel.manage_user',compact('user'));
+    }
 }

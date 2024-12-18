@@ -11,7 +11,7 @@
     <!-- Flowbite CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    @livewireStyles
+    
 
 </head>
 
@@ -127,6 +127,8 @@
      <!-- DataTables JS -->
      <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     @stack('js')
+
+    @stack('css')
 </body>
 
 </html>

@@ -19,8 +19,6 @@ Route::get('/', [AuthController::class, 'showLogin']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -33,7 +31,7 @@ Route::prefix('user')->middleware(['auth', 'role:user'])->group(function () {
 });
 // Rute Dashboard User
 
-    
+
 
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
@@ -76,4 +74,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/data-panel/autocomplete_status', [MasterDataController::class, 'status_autocomplete'])->name('admin.masterdata.autocomplete.status');
     Route::get('/data-panel/edit/transactions/{id}', [MasterDataController::class, 'editTransactions'])->name('admin.masterdata.edit.transactions');
     Route::put('/data-panel/transactions/{id}', [MasterDataController::class, 'updateTransactions'])->name('admin.masterdata.update.transactions');
+    Route::get('/data-panel/manage-user', [MasterDataController::class, 'manageUser'])->name('admin.masterdata.manage_user');
+
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('post.register');
 });
