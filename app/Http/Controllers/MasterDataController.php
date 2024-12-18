@@ -5,18 +5,47 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-use function Laravel\Prompts\select;
 
 class MasterDataController extends Controller
 {
     public function index()
     {
-        $query = DB::table("t_user")->select('t_user.code', 't_user.nama', 'lampiran.no_spp', 'lampiran.tanggal_spp', 'lampiran.status_karyawan', 'lampiran.unit', 'lampiran.hutang')
-            ->leftJoin('lampiran', 'lampiran.code', '=', 't_user.code')
-            ->groupBy('t_user.code', 't_user.nama', 'lampiran.no_spp', 'lampiran.tanggal_spp', 'lampiran.status_karyawan', 'lampiran.unit', 'lampiran.hutang');
-        $data = $query->get();
+        // Query dasar untuk mengambil data
+        $query = DB::table("t_user")->select(
+            't_user.code',
+            't_user.nama',
+            'lampiran.no_spp',
+            'lampiran.tanggal_spp',
+            'lampiran.status_karyawan',
+            'lampiran.unit',
+            'lampiran.hutang'
+        )
+        ->leftJoin('lampiran', 'lampiran.code', '=', 't_user.code')
+        ->groupBy(
+            't_user.code',
+            't_user.nama',
+            'lampiran.no_spp',
+            'lampiran.tanggal_spp',
+            'lampiran.status_karyawan',
+            'lampiran.unit',
+            'lampiran.hutang'
+        )
+        ->orderBy('t_user.code', 'asc'); 
+    
+        // Variabel untuk menyimpan data hasil chunk
+        $data = [];
+    
+        // Gunakan chunk untuk memproses data dalam potongan kecil
+        $query->chunk(1000, function ($chunk) use (&$data) {
+            foreach ($chunk as $row) {
+                $data[] = $row; // Gabungkan data ke dalam array utama
+            }
+        });
+    
+        // Kirim data ke view
         return view('admin.panel.datapanel', compact('data'));
     }
+    
 
     public function create()
     {

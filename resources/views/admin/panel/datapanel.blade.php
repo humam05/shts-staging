@@ -100,7 +100,9 @@
             border-radius: .25rem; /*rounded*/
             border-color: #edf2f7; /*border-gray-200*/
             background-color: #edf2f7; /*bg-gray-200*/
-            margin-bottom: 5px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            margin-right: 25px;
         }
 
         /* Row Hover */

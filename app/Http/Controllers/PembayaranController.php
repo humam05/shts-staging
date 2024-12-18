@@ -113,9 +113,10 @@ class PembayaranController extends Controller
             $query->whereRaw('CASE WHEN (lampiran.hutang - COALESCE((SELECT SUM(t.pencicilan_rutin + t.pencicilan_bertahap)FROM transactions t WHERE t.code = transactions.code), 0)) = 0 THEN "Lunas" ELSE "Belum Lunas" END = ?', [$request->status_lunas]);
         }
 
-        $transactions = $query->groupBy('transactions.code', 't_user.nama', 'lampiran.no_spp', 'lampiran.tanggal_spp', 'lampiran.status_karyawan', 'lampiran.unit', 'lampiran.hutang')
+        $transactions = $query
+        ->groupBy('transactions.code', 't_user.nama', 'lampiran.no_spp', 'lampiran.tanggal_spp', 'lampiran.status_karyawan', 'lampiran.unit', 'lampiran.hutang')
+        ->get();
 
-            ->get();
 
         $total_jan = $transactions->sum('jan_value');
         $total_feb = $transactions->sum('feb_value');
