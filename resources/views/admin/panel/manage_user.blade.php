@@ -42,8 +42,11 @@
                                 <div class="flex items-center space-x-2">
                                     <a href="#"
                                         class="btn bg-yellow-400 hover:bg-yellow-500 text-white font-bold py-1 px-3 rounded">Edit</a>
-                                    <a href="#"
-                                        class="btn bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded">Hapus</a>
+                                        <form action="{{ route('admin.masterdata.manage_user.delete', $row->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded">Hapus</button>
+                                        </form>                                        
                                 </div>
                             </td>
                         </tr>

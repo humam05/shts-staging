@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Hash;
 
 class MasterDataController extends Controller
 {
@@ -20,32 +20,32 @@ class MasterDataController extends Controller
             'lampiran.unit',
             'lampiran.hutang'
         )
-        ->leftJoin('lampiran', 'lampiran.code', '=', 't_user.code')
-        ->groupBy(
-            't_user.code',
-            't_user.nama',
-            'lampiran.no_spp',
-            'lampiran.tanggal_spp',
-            'lampiran.status_karyawan',
-            'lampiran.unit',
-            'lampiran.hutang'
-        )
-        ->orderBy('t_user.code', 'asc'); 
-    
+            ->leftJoin('lampiran', 'lampiran.code', '=', 't_user.code')
+            ->groupBy(
+                't_user.code',
+                't_user.nama',
+                'lampiran.no_spp',
+                'lampiran.tanggal_spp',
+                'lampiran.status_karyawan',
+                'lampiran.unit',
+                'lampiran.hutang'
+            )
+            ->orderBy('t_user.code', 'asc');
+
         // Variabel untuk menyimpan data hasil chunk
         $data = [];
-    
+
         // Gunakan chunk untuk memproses data dalam potongan kecil
         $query->chunk(1000, function ($chunk) use (&$data) {
             foreach ($chunk as $row) {
                 $data[] = $row; // Gabungkan data ke dalam array utama
             }
         });
-    
+
         // Kirim data ke view
         return view('admin.panel.datapanel', compact('data'));
     }
-    
+
 
     public function create()
     {
@@ -211,8 +211,61 @@ class MasterDataController extends Controller
         return redirect()->route('admin.masterdata.edit.transactions', $id)->with('success', 'Transaksi berhasil diperbarui.');
     }
 
-    public function manageUser() {
+    public function manageUser()
+    {
         $user = DB::table('users')->get();
-        return view('admin.panel.manage_user',compact('user'));
+        return view('admin.panel.manage_user', compact('user'));
+    }
+
+    public function editUser($id)
+    {
+        $data = DB::table('users')->where('id', $id)->first();
+        return view('admin.panel.edit_user', compact('data'));
+    }
+
+    // public function updateUser(Request $request, User $user)
+    // {
+    //     // Validasi data user utama
+    //     $data = $request->validate([
+    //         'kode_user' => 'required',
+    //         'nama' => 'required|string|max:255',
+    //     ]);
+
+    //     // Validasi tambahan untuk data lampiran
+    //     $lampiranData = $request->validate([
+    //         'status_karyawan' => 'nullable|string|max:255',
+    //         'tanggal_spp' => 'nullable|date',
+    //         'no_spp' => 'nullable|string|max:255',
+    //         'unit' => 'nullable|string|max:255',
+    //         'hutang' => 'nullable|numeric',
+    //     ]);
+
+    //     // Perbarui data user
+    //     if ($request->filled('password')) {
+    //         $data['password'] = Hash::make($data['password']);
+    //     } else {
+    //         unset($data['password']);
+    //     }
+
+    //     // Update data user
+    //     $user->update($data);
+
+    //     // Perbarui data lampiran jika ada
+    //     if ($user->lampiran) {
+    //         $user->lampiran->update($lampiranData);
+    //     } else {
+    //         // Jika lampiran belum ada, buat lampiran baru
+    //         $user->lampiran()->create($lampiranData);
+    //     }
+
+    //     // Redirect dengan pesan sukses
+    //     return redirect()->route('admin.dashboard')->with('success', 'User dan lampiran berhasil diperbarui.');
+    // }
+
+    public function deleteUser($id)
+    {
+        DB::table('users')->where('id', $id)->delete();
+
+        return redirect()->route('admin.masterdata.manage_user')->with('success', 'User berhasil dihapus.');
     }
 }

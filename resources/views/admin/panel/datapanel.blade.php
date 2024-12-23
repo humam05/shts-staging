@@ -173,6 +173,7 @@
                     infoEmpty: "Showing 0 to 0 of 0 entries",
                     infoFiltered: "(filtered from _MAX_ total entries)"
                 },
+                
                 initComplete: function() {
                     // Hide progress bar when table is fully loaded
                     $("#progress").fadeOut("slow");
