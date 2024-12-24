@@ -60,10 +60,33 @@
 
                             <a href="{{ route('admin.masterdata') }}"
                                 class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Master
-                                Data Panel</a>
+                                Data Panel</a>   
 
-                            <a href="{{ route('admin.masterdata.monthly_report') }}"
-                                class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Monthly Export</a>
+                            <div class="relative ml-3">
+                                <button id="user-menu-button" data-dropdown-toggle="bulanan-dropdown"
+                                    class="flex items-center text-gray-700 focus:outline-none">
+                                    <span
+                                        class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">
+                                        Bulanan
+                                    </span>
+                                    <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </button>
+                                <div id="bulanan-dropdown"
+                                    class="hidden z-10 absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1">
+                                    <a href="{{ route('admin.masterdata.monthly_report') }}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Lap. Bulanan
+                                    </a>
+                                    <a href="{{ route('admin.masterdata.import') }}"
+                                        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Import Data
+                                    </a>
+                                </div>
+                            </div>                       
                         @elseif (Auth::user()->role === 'user')
                             <a href="{{ route('user.home') }}"
                                 class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Home</a>
