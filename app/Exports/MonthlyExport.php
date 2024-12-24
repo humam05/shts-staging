@@ -32,9 +32,7 @@ class MonthlyExport implements FromCollection, WithHeadings, WithMapping
             'Status Karyawan',
             'Unit',
             'Pembayaran',
-            'Sisa Hutang',
-            'Last Transaction Bulan',
-            'Last Transaction Year',
+            'Sisa Hutang'
         ];
     }
 
@@ -47,9 +45,7 @@ class MonthlyExport implements FromCollection, WithHeadings, WithMapping
             $transaction->status_karyawan,
             $transaction->unit,
             $transaction->pembayaran,
-            $transaction->sisa_hutang,
-            $transaction->last_transaction_bulan,
-            $transaction->last_transaction_year,
+            $transaction->sisa_hutang
         ];
     }
 }

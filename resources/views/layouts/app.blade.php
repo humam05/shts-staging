@@ -11,7 +11,7 @@
     <!-- Flowbite CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    
+
 
 </head>
 
@@ -59,14 +59,17 @@
                             </div>
 
                             <a href="{{ route('admin.masterdata') }}"
-                                class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Master Data Panel</a>
+                                class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Master
+                                Data Panel</a>
+
+                            <a href="{{ route('admin.masterdata.monthly_report') }}"
+                                class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Monthly Export</a>
                         @elseif (Auth::user()->role === 'user')
-                        <a href="{{ route('user.home') }}"
-                        class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Home</a>
-                        <a href="{{ route('user.monitor') }}"
-                        class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Monitoring</a>
+                            <a href="{{ route('user.home') }}"
+                                class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Home</a>
+                            <a href="{{ route('user.monitor') }}"
+                                class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Monitoring</a>
                         @else
-                           
                         @endif
 
                         <!-- Dropdown -->
@@ -112,16 +115,16 @@
 
         @yield('content')
     </div>
-    
+
 
     <!-- Flowbite JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.6.5/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <!-- DataTables CSS -->
-     <!-- jQuery harus dimuat terlebih dahulu -->
-     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     <!-- DataTables JS -->
-     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <!-- jQuery harus dimuat terlebih dahulu -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     @stack('js')
 
     @stack('css')
