@@ -34,7 +34,6 @@
                 </div>
 
                 {{-- Transaksi Terakhir --}}
-
                 <div>
                     <label for="transaksi_akhir" class="block text-sm font-medium text-gray-700 mb-2">Tanggal Transaksi
                         Terakhir</label>
@@ -62,21 +61,28 @@
                         value="{{ request('unit') }}" autocomplete="off">
                 </div>
 
-                {{-- Tombol Filter --}}
-                <div class="flex space-x-2 items-end">
-                    <button type="submit"
+                
+                <{{-- Tombol Filter --}} <div class="flex space-x-2 items-end">
+                    <button type="submit" name="filter" value="filter"
                         class="bg-indigo-600 text-white py-2 px-4 rounded-md shadow hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300">
                         Terapkan Filter
                     </button>
-                    <input type="hidden" name="export" value="true">
-                    <button type="submit" class="btn btn-primary">Export to Excel</button>
+
+                    {{-- Export to Excel Button --}}
+                    <button type="submit" name="export" value="true"
+                        class="bg-green-600 text-white py-2 px-4 rounded-md shadow hover:bg-green-700 focus:outline-none focus:ring focus:ring-green-300">
+                        Export to Excel
+                    </button>
+
+                    {{-- Reset Button --}}
                     <a href="{{ route('admin.masterdata.monthly_report') }}"
                         class="bg-gray-200 text-gray-700 py-2 px-4 rounded-md shadow hover:bg-gray-300 focus:outline-none focus:ring focus:ring-gray-300">
                         Reset
                     </a>
-                </div>
             </div>
+
         </form>
+
 
         {{-- Tabel Data --}}
         <div class="bg-white shadow rounded-lg overflow-x-auto">
