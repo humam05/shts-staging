@@ -121,6 +121,16 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" crossorigin="anonymous"></script>
 
     <script>
+         function formatAccounting(value) {
+        return new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            minimumFractionDigits: 0
+        }).format(value);
+    }
+    </script>
+
+    <script>
         // Function to add a new row of payment fields
         function addPaymentRow() {
             var dynamicFields = document.getElementById('dynamicFields');
@@ -213,8 +223,8 @@
                     $(this).closest('.payment-row').find('.nama').val(ui.item.data.nama);
                     $(this).closest('.payment-row').find('.no_spp').val(ui.item.data.no_spp);
                     $(this).closest('.payment-row').find('.tanggal_spp').val(ui.item.data.tanggal_spp);
-                    $(this).closest('.payment-row').find('.nilai_pokok').val(ui.item.data.nilai_pokok);
-                    $(this).closest('.payment-row').find('.sisa_sht').val(ui.item.data.sisa_sht);
+                    $(this).closest('.payment-row').find('.nilai_pokok').val(formatAccounting(ui.item.data.nilai_pokok));
+                    $(this).closest('.payment-row').find('.sisa_sht').val(formatAccounting(ui.item.data.sisa_sht));
                 },
                 open: function() {
                     // Style the autocomplete dropdown to make it more accessible and organized

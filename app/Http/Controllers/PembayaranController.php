@@ -40,7 +40,7 @@ class PembayaranController extends Controller
                 'lampiran.unit',
                 'lampiran.status_karyawan',
                 'lampiran.hutang AS nilai_pokok',
-                DB::raw('lampiran.hutang - SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap) AS sisa_sht')
+                DB::raw('lampiran.hutang - COALESCE(SUM(transactions.pencicilan_rutin + transactions.pencicilan_bertahap), 0) as sisa_sht')
             )
             ->leftJoin('lampiran', 't_user.code', '=', 'lampiran.code')
             ->leftJoin('transactions', 't_user.code', '=', 'transactions.code')

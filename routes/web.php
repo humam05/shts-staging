@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MasterDataController;
+use App\Http\Controllers\MonthlyReportController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\RekapController;
 use App\Http\Controllers\UserController;
@@ -77,6 +78,8 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/data-panel/manage-user', [MasterDataController::class, 'manageUser'])->name('admin.masterdata.manage_user');
     Route::get('/data-panel/manage-user/edit/{id}', [MasterDataController::class, 'editUser'])->name('admin.masterdata.manage_user.edit');
     Route::delete('/data-panel/manage-user/delete/{id}', [MasterDataController::class, 'deleteUser'])->name('admin.masterdata.manage_user.delete');
+    Route::get('/data-panel/monthly-report/', [MonthlyReportController::class, 'index'])->name('admin.masterdata.monthly_report');
+
 
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('post.register');
