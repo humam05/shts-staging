@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Lampiran;
 use App\Models\Transaction;
 use App\Models\UserModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -19,11 +20,17 @@ class PembayaranController extends Controller
 
     public function index(Request $request)
     {
+        $now = Carbon::now();
+        $defaultDate = $now->copy()->subMonth(); // Clone to prevent mutation
+        $defaultYear = $defaultDate->year;
+        $defaultMonth = $defaultDate->month;
 
-        return view('admin.pembayaran');
+        // 2. Retrieve Filters from Request
+        $year = $request->input('tahun', $defaultYear);
+        $month = $request->input('bulan', $defaultMonth);
+
+        return view('admin.pembayaran', compact('year', 'month'));
     }
-
-
 
     public function autocomplete(Request $request)
     {
@@ -55,9 +62,6 @@ class PembayaranController extends Controller
         return response()->json($users);
 
     }
-
-
-
 
     public function monitor(Request $request)
     {
@@ -140,5 +144,45 @@ class PembayaranController extends Controller
         $years = Transaction::select('year')->distinct()->pluck('year');
         $years_spp = Lampiran::selectRaw('YEAR(tanggal_spp) as year_spp')->distinct()->pluck('year_spp');
         return view('admin.monitor_pembayaran', compact('transactions', 'total_sisa', 'total_dibayarkan', 'years_spp', 'total_jan', 'total_feb', 'total_mar', 'total_apr', 'total_may', 'total_june', 'total_july', 'total_ags', 'total_sep', 'total_oct', 'total_nov', 'total_dec', 'total_grand', 'units', 'status', 'years'));
+    }
+
+    public function storeTransaction(Request $request)
+    {
+        // Validasi input untuk memastikan kode_user ada di database dan pencicilan ada nilainya
+        $data = $request->validate([
+            'kode_user' => 'required|array',  // Pastikan kode_user adalah array
+            'kode_user.*' => 'required|exists:t_user,code',  // Validasi setiap kode_user harus ada di tabel t_user
+            'pencicilan_rutin' => 'required|array',
+            'pencicilan_rutin.*' => 'required|numeric',  // Validasi setiap pencicilan_rutin harus angka
+            'pencicilan_bertahap' => 'required|array',
+            'pencicilan_bertahap.*' => 'required|numeric',  // Validasi setiap pencicilan_bertahap harus angka
+            'bulan.*' => 'required|array',  // Validasi bulan harus angka dan antara 1-12
+            'bulan' => 'required|numeric|between:1,12',  // Validasi bulan harus angka dan antara 1-12
+            'tahun.*' => 'required|array', 
+            'tahun' => 'required|numeric',  // Validasi tahun harus angka
+            
+        ]);
+
+        // Menyimpan data transaksi
+        $transactions = [];
+
+        foreach ($data['kode_user'] as $index => $kodeUser) {
+            $transactionData = [
+                'code' => $kodeUser,
+                'bulan' => $data['bulan'], // Bulan sekarang
+                'year' => $data['tahun'],  // Tahun sekarang
+                'pencicilan_rutin' => str_replace(',', '', $data['pencicilan_rutin'][$index]),  // Hapus koma di nilai pencicilan
+                'pencicilan_bertahap' => str_replace(',', '', $data['pencicilan_bertahap'][$index]), // Hapus koma di nilai pencicilan bertahap
+            ];
+
+            // Simpan data transaksi
+            $transactions[] = $transactionData;
+        }
+
+        // Batch insert transaksi
+        Transaction::insert($transactions);
+
+        // Redirect atau kembali dengan pesan sukses
+        return redirect()->route('admin.form.pembayaran')->with('success', 'Transaksi berhasil ditambahkan.');
     }
 }

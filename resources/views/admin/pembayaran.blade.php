@@ -21,6 +21,32 @@
                                         placeholder="Masukkan kode user atau nama">
                                 </div>
 
+                                {{-- Tahun --}}
+                                <div>
+                                    <label for="tahun" class="block text-sm font-medium text-gray-700">Tahun</label>
+                                    <select id="tahun" name="tahun"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        @for ($i = date('Y'); $i >= 2000; $i--)
+                                            <option value="{{ $i }}" {{ $i == $year ? 'selected' : '' }}>
+                                                {{ $i }}
+                                            </option>
+                                        @endfor
+                                    </select>
+                                </div>
+
+                                {{-- Bulan --}}
+                                <div>
+                                    <label for="bulan" class="block text-sm font-medium text-gray-700">Bulan</label>
+                                    <select id="bulan" name="bulan"
+                                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        @foreach (range(1, 12) as $m)
+                                            <option value="{{ $m }}" {{ $m == $month ? 'selected' : '' }}>
+                                                {{ \Carbon\Carbon::create()->month($m)->format('F') }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                                 <!-- Pencicilan Rutin -->
                                 <div class="mb-4">
                                     <label for="pencicilan_rutin[]"
@@ -121,13 +147,13 @@
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" crossorigin="anonymous"></script>
 
     <script>
-         function formatAccounting(value) {
-        return new Intl.NumberFormat('id-ID', {
-            style: 'currency',
-            currency: 'IDR',
-            minimumFractionDigits: 0
-        }).format(value);
-    }
+        function formatAccounting(value) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0
+            }).format(value);
+        }
     </script>
 
     <script>
@@ -223,8 +249,10 @@
                     $(this).closest('.payment-row').find('.nama').val(ui.item.data.nama);
                     $(this).closest('.payment-row').find('.no_spp').val(ui.item.data.no_spp);
                     $(this).closest('.payment-row').find('.tanggal_spp').val(ui.item.data.tanggal_spp);
-                    $(this).closest('.payment-row').find('.nilai_pokok').val(formatAccounting(ui.item.data.nilai_pokok));
-                    $(this).closest('.payment-row').find('.sisa_sht').val(formatAccounting(ui.item.data.sisa_sht));
+                    $(this).closest('.payment-row').find('.nilai_pokok').val(formatAccounting(ui.item.data
+                        .nilai_pokok));
+                    $(this).closest('.payment-row').find('.sisa_sht').val(formatAccounting(ui.item.data
+                        .sisa_sht));
                 },
                 open: function() {
                     // Style the autocomplete dropdown to make it more accessible and organized
@@ -238,7 +266,7 @@
                         "box-shadow": "0 2px 5px rgba(0,0,0,0.15)", // Optional: Add a shadow for better contrast
                         "width": inputWidth + "px", // Set the width to match the input field width
                         "max-width": inputWidth +
-                        "px", // Ensure the dropdown doesn't exceed the input width
+                            "px", // Ensure the dropdown doesn't exceed the input width
                     });
 
                     $(".ui-menu-item").css({
