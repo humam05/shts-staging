@@ -27,6 +27,7 @@ class MonthlyReportController extends Controller
         $unitFilter = $request->input('unit');
         $transaksiTerakhirFilter = $request->input('transaksi_akhir');
         $statusLunasFilter = $request->input('status_lunas');
+        $filterPembayaran = $request->input('pembayaran');
         $isExport = $request->input('export') === 'true';
 
         // 3. Build the Base Query
@@ -92,6 +93,12 @@ class MonthlyReportController extends Controller
             END AS status_lunas
         ")
                 ->having('status_lunas', '=', $statusLunasFilter);
+        }
+
+        if ($filterPembayaran == 'Rutin') {
+            $query->where('transactions.pencicilan_rutin', '>', 0);
+        } elseif ($filterPembayaran == 'Bertahap') {
+            $query->where('transactions.pencicilan_bertahap', '>', 0);
         }
 
         // 5. Apply Unit Filter if Present

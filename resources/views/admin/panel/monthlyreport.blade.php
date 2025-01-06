@@ -63,6 +63,17 @@
                     </select>
                 </div>
 
+                {{-- Status Bertahap/Rutin --}}
+                <div>
+                    <label for="pembayaran" class="block text-sm font-medium text-gray-700">Pembayaran</label>
+                    <select id="pembayaran" name="pembayaran"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                        <option value="">Semua</option>
+                        <option value="Rutin" {{ request('pembayaran') == 'Rutin' ? 'selected' : '' }}>Rutin</option>
+                        <option value="Bertahap" {{ request('pembayaran') == 'Bertahap' ? 'selected' : '' }}>Bertahap</option>
+                    </select>
+                </div>
+
                 {{-- Filter Unit (Textfield Autocomplete) --}}
                 <div>
                     <label for="unit" class="block text-sm font-medium text-gray-700">Unit</label>

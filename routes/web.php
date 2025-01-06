@@ -61,7 +61,6 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/data-panel/import/', [ImportPembayaranController::class, 'index'])->name('admin.masterdata.import_view');
     Route::post('/data-panel/import/', [ImportPembayaranController::class, 'import'])->name('admin.masterdata.import');
 
-
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('post.register');
 });
