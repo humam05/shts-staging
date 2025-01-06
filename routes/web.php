@@ -87,6 +87,7 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/data-panel/autocomplete_status', [MasterDataController::class, 'status_autocomplete'])->name('admin.masterdata.autocomplete.status');
     Route::get('/data-panel/edit/transactions/{id}', [MasterDataController::class, 'editTransactions'])->name('admin.masterdata.edit.transactions');
     Route::put('/data-panel/transactions/{id}', [MasterDataController::class, 'updateTransactions'])->name('admin.masterdata.update.transactions');
+    Route::delete('/data-panel/transactions/{id}', [MasterDataController::class, 'deleteTransactions'])->name('admin.masterdata.delete.transactions');
     Route::get('/data-panel/manage-user', [MasterDataController::class, 'manageUser'])->name('admin.masterdata.manage_user');
     Route::get('/data-panel/manage-user/edit/{id}', [MasterDataController::class, 'editUser'])->name('admin.masterdata.manage_user.edit');
     Route::delete('/data-panel/manage-user/delete/{id}', [MasterDataController::class, 'deleteUser'])->name('admin.masterdata.manage_user.delete');

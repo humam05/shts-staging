@@ -17,11 +17,11 @@
             </div>
         @endif
 
-        
-        
+
+
         <!-- Transactions Table -->
         <div class="overflow-x-auto">
-            <h1 class="flex items-center text-3xl font-bold mb-5 text-gray-700">Detail Transaksi, {{$user->nama}}</h1>
+            <h1 class="flex items-center text-3xl font-bold mb-5 text-gray-700">Detail Transaksi, {{ $user->nama }}</h1>
             <table id="transactionsTable" class="min-w-full bg-white border border-gray-200">
                 <thead>
                     <tr>
@@ -50,30 +50,58 @@
                 <tbody>
                     @forelse ($data as $transaction)
                         <tr class="hover:bg-gray-100">
+                            <!-- Month -->
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
                                 {{ \Carbon\Carbon::createFromFormat('m', $transaction->bulan)->translatedFormat('F') }}
                             </td>
+                
+                            <!-- Year -->
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
-                                {{ $transaction->year }}
+                                {{ e($transaction->year) }}
                             </td>
+                
+                            <!-- Pencicilan Rutin -->
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
                                 Rp {{ number_format($transaction->pencicilan_rutin, 2, ',', '.') }}
                             </td>
+                
+                            <!-- Pencicilan Bertahap -->
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
                                 Rp {{ number_format($transaction->pencicilan_bertahap, 2, ',', '.') }}
                             </td>
+                
+                            <!-- Actions -->
                             <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
-                                <a href="{{ route('admin.masterdata.edit.transactions', $transaction->id) }}">
+                                <!-- Edit Link -->
+                                <a href="{{ route('admin.masterdata.edit.transactions', $transaction->id) }}"
+                                   class="text-blue-500 hover:underline">
                                     Edit Transaksi
-                                </a>                                
+                                </a>
+                
+                                <!-- Delete Form -->
+                                <form action="{{ route('admin.masterdata.delete.transactions', $transaction->id) }}" 
+                                      method="POST" 
+                                      class="inline-flex">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                            class="btn bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded"
+                                            aria-label="Hapus transaksi">
+                                        Hapus
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @empty
+                        <!-- Empty State -->
                         <tr>
-                            <td colspan="5" class="text-center py-4 text-sm text-gray-500">Tidak ada transaksi.</td>
+                            <td colspan="5" class="text-center py-4 text-sm text-gray-500">
+                                Tidak ada transaksi.
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
+                
             </table>
         </div>
     </div>

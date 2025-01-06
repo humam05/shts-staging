@@ -211,6 +211,24 @@ class MasterDataController extends Controller
         return redirect()->route('admin.masterdata.edit.transactions', $id)->with('success', 'Transaksi berhasil diperbarui.');
     }
 
+    public function deleteTransactions($id)
+    {
+        // Ambil nilai 'code' berdasarkan 'id'
+        $transaction = DB::table('transactions')->select('code')->where('id', $id)->first();
+
+        if ($transaction) {
+            // Hapus transaksi berdasarkan 'id'
+            DB::table('transactions')->where('id', $id)->delete();
+
+            // Redirect menggunakan 'code'
+            return redirect()->route('admin.masterdata.detail', $transaction->code)
+                ->with('success', 'Transaksi berhasil dihapus.');
+        }
+
+        // Jika transaksi tidak ditemukan
+        return redirect()->back()->with('error', 'Transaksi tidak ditemukan.');
+    }
+
     public function manageUser()
     {
         $user = DB::table('users')->get();
@@ -223,45 +241,8 @@ class MasterDataController extends Controller
         return view('admin.panel.edit_user', compact('data'));
     }
 
-    // public function updateUser(Request $request, User $user)
-    // {
-    //     // Validasi data user utama
-    //     $data = $request->validate([
-    //         'kode_user' => 'required',
-    //         'nama' => 'required|string|max:255',
-    //     ]);
 
-    //     // Validasi tambahan untuk data lampiran
-    //     $lampiranData = $request->validate([
-    //         'status_karyawan' => 'nullable|string|max:255',
-    //         'tanggal_spp' => 'nullable|date',
-    //         'no_spp' => 'nullable|string|max:255',
-    //         'unit' => 'nullable|string|max:255',
-    //         'hutang' => 'nullable|numeric',
-    //     ]);
-
-    //     // Perbarui data user
-    //     if ($request->filled('password')) {
-    //         $data['password'] = Hash::make($data['password']);
-    //     } else {
-    //         unset($data['password']);
-    //     }
-
-    //     // Update data user
-    //     $user->update($data);
-
-    //     // Perbarui data lampiran jika ada
-    //     if ($user->lampiran) {
-    //         $user->lampiran->update($lampiranData);
-    //     } else {
-    //         // Jika lampiran belum ada, buat lampiran baru
-    //         $user->lampiran()->create($lampiranData);
-    //     }
-
-    //     // Redirect dengan pesan sukses
-    //     return redirect()->route('admin.dashboard')->with('success', 'User dan lampiran berhasil diperbarui.');
-    // }
-
+   
     public function deleteUser($id)
     {
         DB::table('users')->where('id', $id)->delete();
