@@ -71,10 +71,10 @@
                             </td>
                 
                             <!-- Actions -->
-                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700">
+                            <td class="px-6 py-4 border-b border-gray-200 text-sm text-gray-700 space-x-2">
                                 <!-- Edit Link -->
                                 <a href="{{ route('admin.masterdata.edit.transactions', $transaction->id) }}"
-                                   class="text-blue-500 hover:underline">
+                                    class="bg-yellow-400 hover:bg-yellow-500 text-white py-1 px-3 rounded-md text-sm">
                                     Edit Transaksi
                                 </a>
                 
