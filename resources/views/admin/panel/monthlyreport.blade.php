@@ -41,6 +41,22 @@
                     </select>
                 </div>
 
+                {{-- Status Karyawan --}}
+                <div>
+                    <label for="status_karyawan"
+                        class="block text-sm font-medium text-gray-700 mb-2">Karpim/Karpel</label>
+                    <select name="status" id="status_karyawan"
+                        class="border border-gray-300 rounded-lg w-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <option value="">Semua</option>
+                        @foreach ($status as $statusItem)
+                            <option value="{{ $statusItem->status_karyawan }}"
+                                {{ request('status') == $statusItem->status_karyawan ? 'selected' : '' }}>
+                                {{ $statusItem->status_karyawan }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
 
                 {{-- Transaksi Terakhir --}}
                 <div>

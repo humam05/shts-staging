@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\MonthlyExport;
 use App\Exports\MonthlyReportExport;
+use App\Models\Lampiran;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,8 +14,7 @@ class MonthlyReportController extends Controller
 {
     public function index(Request $request)
     {
-
-
+        $status = Lampiran::select('status_karyawan')->distinct()->get();
         // 1. Set Default Year and Month (1 month prior to current date)
         $now = Carbon::now();
         $defaultDate = $now->copy()->subMonth(); // Clone to prevent mutation
@@ -101,6 +101,10 @@ class MonthlyReportController extends Controller
             $query->where('transactions.pencicilan_bertahap', '>', 0);
         }
 
+        if ($request->has('status') && $request->status) {
+            $query->where('lampiran.status_karyawan', $request->status);
+        }
+
         // 5. Apply Unit Filter if Present
         if (!empty($unitFilter)) {
             $query->where('lampiran.unit', '=', $unitFilter);
@@ -122,6 +126,6 @@ class MonthlyReportController extends Controller
         }
 
         // 9. Return the View with Data
-        return view('admin.panel.monthlyreport', compact('transactions', 'year', 'month'));
+        return view('admin.panel.monthlyreport', compact('transactions', 'year', 'month', 'status'));
     }
 }
