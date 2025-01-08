@@ -34,6 +34,10 @@
                 <a href="{{ route('admin.masterdata.manage_user') }}" class="ml-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition duration-200">
                     Manage User Login
                 </a>
+
+                <a href="{{ route('admin.rekap') }}" class="ml-4 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-md shadow-md transition duration-200">
+                    Mass Data Delete
+                </a>
             </div>
 
            

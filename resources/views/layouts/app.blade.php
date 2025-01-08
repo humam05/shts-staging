@@ -27,8 +27,6 @@
                 <div class="flex items-center">
                     @auth
                         @if (Auth::user()->role === 'admin')
-                            <a href="{{ route('admin.rekap') }}"
-                                class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Rekap</a>
                             <a href="{{ route('admin.dashboard') }}"
                                 class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Monitoring</a>
                             {{-- <a href="{{ route('admin.pembayaran') }}" class="text-gray-700 px-3 py-2 rounded-md text-sm font-medium hover:text-blue-600">Pembayaran</a> --}}

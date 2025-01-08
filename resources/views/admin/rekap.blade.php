@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto mt-8 px-4">
-    <h1 class="text-3xl font-semibold mb-4 text-center">Rekap Transaksi</h1>
+    <h1 class="text-3xl font-semibold mb-4 text-center">Mass Transaction Delete</h1>
 
     <!-- Form Filter Tahun dan Kategori -->
     <div class="mb-6 text-center">
