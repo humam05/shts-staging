@@ -34,6 +34,7 @@ class MonthlyExport implements FromCollection, WithHeadings, WithMapping, WithSt
             'Nama',          
             'Status Karyawan',
             'Unit',
+            'Nilai SHT',
             'Pembayaran',
             'Sisa Hutang'
         ];
@@ -47,6 +48,7 @@ class MonthlyExport implements FromCollection, WithHeadings, WithMapping, WithSt
             $transaction->nama,
             $transaction->status_karyawan,
             $transaction->unit,
+            $transaction->hutang,
             $transaction->pembayaran,
             $transaction->sisa_hutang
         ];
@@ -83,19 +85,19 @@ class MonthlyExport implements FromCollection, WithHeadings, WithMapping, WithSt
             ],
         ];
 
-        $sheet->getStyle('A1:F1')->applyFromArray($headerStyle);
+        $sheet->getStyle('A1:G1')->applyFromArray($headerStyle);
 
         $rows = $sheet->getHighestRow();
 
         foreach (range(2, $rows) as $row) {
             if ($row % 2 == 0) {
-                $sheet->getStyle("A$row:F$row")->applyFromArray($zebraStyle);
+                $sheet->getStyle("A$row:G$row")->applyFromArray($zebraStyle);
             }
         }
 
         $sheet->getStyle('E2:E' . $rows)->getNumberFormat()->setFormatCode('_(* #,##0.00_);_(* \(#,##0.00\);_(* "-"??_);_(@_)');
         $sheet->getStyle('F2:F' . $rows)->getNumberFormat()->setFormatCode('_(* #,##0.00_);_(* \(#,##0.00\);_(* "-"??_);_(@_)');       
-
+        $sheet->getStyle('G2:G' . $rows)->getNumberFormat()->setFormatCode('_(* #,##0.00_);_(* \(#,##0.00\);_(* "-"??_);_(@_)');
         return [];
     }
 }
